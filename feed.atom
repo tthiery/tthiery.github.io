@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+	<id>http://tthiery.github.io/</id>
+	<title>My Blog</title>
+	<link rel="self" href="http://tthiery.github.io/" />
+	<rights>2019</rights>
+	<updated>2019-01-23T14:14:22Z</updated>
+	<subtitle>Welcome!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2019/01/23/first-post</id>
+		<title>First Post</title>
+		<link href="http://tthiery.github.io/posts/2019/01/23/first-post" />
+		<updated>2019-01-23T00:00:00Z</updated>
+		<content>&lt;p&gt;This is my first post!&lt;/p&gt;
+&lt;script src="https://gist.github.com/tthiery/2426b191135b4403c5f305727366cecf.js?file=Bar.cs"&gt;&lt;/script&gt;
+</content>
+		<summary>&lt;p&gt;This is my first post!&lt;/p&gt;</summary>
+	</entry>
+</feed>

@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+	<channel>
+		<title>My Blog</title>
+		<link>http://tthiery.github.io/</link>
+		<description>Welcome!</description>
+		<copyright>2019</copyright>
+		<pubDate>Wed, 23 Jan 2019 14:14:22 GMT</pubDate>
+		<lastBuildDate>Wed, 23 Jan 2019 14:14:22 GMT</lastBuildDate>
+		<item>
+			<title>First Post</title>
+			<link>http://tthiery.github.io/posts/2019/01/23/first-post</link>
+			<description>&lt;p&gt;This is my first post!&lt;/p&gt;</description>
+			<guid>http://tthiery.github.io/posts/2019/01/23/first-post</guid>
+			<pubDate>Wed, 23 Jan 2019 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;This is my first post!&lt;/p&gt;
+&lt;script src="https://gist.github.com/tthiery/2426b191135b4403c5f305727366cecf.js?file=Bar.cs"&gt;&lt;/script&gt;
+</content:encoded>
+		</item>
+	</channel>
+</rss>
