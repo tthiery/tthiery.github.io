@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>My Blog - Archive</title>
+        <title>My Blog - Using PlatformIO and Git</title>
         <meta name="description" content="Welcome!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="My Blog" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="My Blog - Archive" />
+        <meta property="og:title" content="My Blog - Using PlatformIO and Git" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://tthiery.github.io/posts" />
+        <meta property="og:url" content="http://tthiery.github.io/posts/2020/05/21/platformio-with-git" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -72,9 +72,17 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>Archive</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>Using PlatformIO and Git</h1>
+    <div class="meta">        
+Published on Thursday, May 21, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/PlatformIO,-Notes" class="btn btn-default btn-xs">PlatformIO, Notes</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -84,30 +92,29 @@
                         <div class="row">
                                 <div id="content" class="col-md-12">
                                         
-        <h1>2020</h1>
-        <hr />
 
-        <div class="post-list">
-            <a href="/posts/2020/05/21/platformio-with-git">
-                <h3 class="post-title">Using PlatformIO and Git</h3>
-            </a>
-            <p class="post-meta">Posted on Thursday, May 21, 2020</p>      
-<p>When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.</p>        </div>   
-        <h1>2019</h1>
-        <hr />
+<p>When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.</p>
+<p>Simplified, the <code>platform.ini</code> contains references to the utilized SDKs and library dependencies. The only PlatformIO artifact are the <code>platform.ini</code> and the entry in the <code>extensions.json</code>.</p>
+<p><code>.gitignore</code> however, will have to contain some entries to avoid commiting the cached PlatformIO is using in form of <code>.pio</code>.</p>
+<h2 id="file-to-add-to-source-control">File to add to source control</h2>
+<ul>
+<li>.vscode
+<ul>
+<li>extensions.json</li>
+</ul>
+</li>
+<li>src/* (your source code)</li>
+<li>headers/* (your header)</li>
+<li>platform.ini</li>
+</ul>
+<h2 id="files-in.gitignore">Files in <code>.gitignore</code></h2>
+<ul>
+<li>.pio (excluding all the cached libraries and board files)</li>
+<li>.vscode/c_cpp_properties.json (cache over all C artifacts)</li>
+<li>.vscode/launch.json (hardcoded to local directory by default)</li>
+</ul>
 
-        <div class="post-list">
-            <a href="/posts/2019/01/23/first-post">
-                <h3 class="post-title">First Post</h3>
-            </a>
-            <p class="post-meta">Posted on Wednesday, January 23, 2019</p>      
-<p>This is my first post!</p>        </div>   
-    <ul class="pager">
-        <li class="previous">                
-        </li>
-        <li class="next">
-        </li>
-    </ul>
+
 
                                 </div>
                         </div>

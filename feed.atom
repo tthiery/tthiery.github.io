@@ -4,8 +4,36 @@
 	<title>My Blog</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2020</rights>
-	<updated>2020-07-18T22:53:52Z</updated>
+	<updated>2020-07-18T23:11:59Z</updated>
 	<subtitle>Welcome!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2020/05/21/platformio-with-git</id>
+		<title>Using PlatformIO and Git</title>
+		<link href="http://tthiery.github.io/posts/2020/05/21/platformio-with-git" />
+		<updated>2020-05-21T00:00:00Z</updated>
+		<content>&lt;p&gt;When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.&lt;/p&gt;
+&lt;p&gt;Simplified, the &lt;code&gt;platform.ini&lt;/code&gt; contains references to the utilized SDKs and library dependencies. The only PlatformIO artifact are the &lt;code&gt;platform.ini&lt;/code&gt; and the entry in the &lt;code&gt;extensions.json&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;.gitignore&lt;/code&gt; however, will have to contain some entries to avoid commiting the cached PlatformIO is using in form of &lt;code&gt;.pio&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id="file-to-add-to-source-control"&gt;File to add to source control&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;.vscode
+&lt;ul&gt;
+&lt;li&gt;extensions.json&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;src/* (your source code)&lt;/li&gt;
+&lt;li&gt;headers/* (your header)&lt;/li&gt;
+&lt;li&gt;platform.ini&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="files-in.gitignore"&gt;Files in &lt;code&gt;.gitignore&lt;/code&gt;&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;.pio (excluding all the cached libraries and board files)&lt;/li&gt;
+&lt;li&gt;.vscode/c_cpp_properties.json (cache over all C artifacts)&lt;/li&gt;
+&lt;li&gt;.vscode/launch.json (hardcoded to local directory by default)&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>&lt;p&gt;When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2019/01/23/first-post</id>
 		<title>First Post</title>

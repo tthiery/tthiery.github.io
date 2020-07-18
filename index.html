@@ -89,6 +89,33 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/2020/05/21/platformio-with-git">
+                        <h2 class="post-title">Using PlatformIO and Git</h2>
+                    </a>
+                    <p class="post-meta">Posted on Thursday, May 21, 2020</p>
+<p>When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.</p>
+<p>Simplified, the <code>platform.ini</code> contains references to the utilized SDKs and library dependencies. The only PlatformIO artifact are the <code>platform.ini</code> and the entry in the <code>extensions.json</code>.</p>
+<p><code>.gitignore</code> however, will have to contain some entries to avoid commiting the cached PlatformIO is using in form of <code>.pio</code>.</p>
+<h2 id="file-to-add-to-source-control">File to add to source control</h2>
+<ul>
+<li>.vscode
+<ul>
+<li>extensions.json</li>
+</ul>
+</li>
+<li>src/* (your source code)</li>
+<li>headers/* (your header)</li>
+<li>platform.ini</li>
+</ul>
+<h2 id="files-in.gitignore">Files in <code>.gitignore</code></h2>
+<ul>
+<li>.pio (excluding all the cached libraries and board files)</li>
+<li>.vscode/c_cpp_properties.json (cache over all C artifacts)</li>
+<li>.vscode/launch.json (hardcoded to local directory by default)</li>
+</ul>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/2019/01/23/first-post">
                         <h2 class="post-title">First Post</h2>
                     </a>
@@ -108,6 +135,7 @@
 
             <h5>Tags</h5>
             <div>
+                    <a role="button" href="/tags/PlatformIO,-Notes" class="btn btn-default btn-sm"> PlatformIO, Notes (1)</a>
                     <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
             </div>
             <ul class="pager">
