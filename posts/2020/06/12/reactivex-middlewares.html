@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>My Blog - Introduction</title>
+        <title>My Blog - ReactiveX Middlewares</title>
         <meta name="description" content="Welcome!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="My Blog" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="My Blog - Introduction" />
+        <meta property="og:title" content="My Blog - ReactiveX Middlewares" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://tthiery.github.io/tags/Introduction" />
+        <meta property="og:url" content="http://tthiery.github.io/posts/2020/06/12/reactivex-middlewares" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -72,9 +72,22 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>Introduction</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>ReactiveX Middlewares</h1>
+    <div class="meta">        
+Published on Friday, June 12, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/Architecture" class="btn btn-default btn-xs">Architecture</a>
+                    <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-xs">ReactiveX</a>
+                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-xs">SharpBrick.PoweredUp</a>
+                    <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-xs">System.Reactive</a>
+                    <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-xs">VioletGrass.Middleware</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -83,44 +96,87 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-            
-        <div class="post-list">
-            <a href="/posts/2019/01/23/first-post">
-                <h3 class="post-title">First Post</h3>
-            </a>
-            <p class="post-meta">Posted on Wednesday, January 23, 2019</p>      
-<p>This is my first post!</p>        </div>   
+                                        
+
+<p>While implementing <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> an interesting problem came up to solve: How to handle the incoming messages of the Bluetooth Low Energy based communication protocol. On top of the Bluetooth abstraction there is a simple callback which would receive roughly 50 different message types which would need dispatching to several locations, some locations would even spawn up dynamically over time. I needed an infrastructure! I needed a middleware 😀.</p>
+<h2 id="possible-solutions">Possible Solutions</h2>
+<p>Within the tighter .NET ecosystem (a.k.a. everything what Microsoft and close friends throw at us) there are the following libraries for push based messaging:</p>
+<ul>
+<li><strong><code>System.Reactive</code></strong>: The .NET implementation part (and godfather) of the ReactiveX project (e.g. JavaScript: <code>rxjs</code>). The library is push-based, threading/buffering is optional, allow optional subscription, supports LINQ, allow building dynamic pipelines but is heap based.</li>
+<li>ASP.NET Core <strong>middleware</strong> stack. Unfortunately, in the current state bound to HTTP. Standalone implementations like <a href="https://github.com/violetgrass/middleware">violetgrass/middleware</a> (disclaimer: another side project) make the basic concept available to other server/dispatcher applications.</li>
+<li><code>System.Threading.Channels</code>: A part of the ASP.NET Core stack, focused on channeling data between separate producer and consumer threads. The library is push- and pull-based, buffering is including, requires active consumers and does not support LINQ.</li>
+</ul>
+<h2 id="middlewares">Middlewares</h2>
+<p>Ignoring <code>System.Threading.Channels</code> for now, both <code>System.Reactive</code> and ASP.NET Core compiled middlewares are basically methods to build a series of functions between the place of source and an ultimate target</p>
+<p>A compiled middleware is build upfront and is optimized on efficiency</p>
+<pre><code class="language-csharp">public class QueueMessageContext : Context
+{
+    public Message Message { get; set; }
+}
+
+var stack = new MiddlewareBuilder&lt;QueueMessageContext&gt;()
+    // middleware step
+    .Use(async (context, next) =&gt; {
+        // do something with the context.Message
+        await next(context); 
+    })
+    // middleware step
+    .Use(async (context, next) =&gt; {
+        // do something with the context.Message
+        await next(context); 
+    })
+    // final handling of message
+    .Use(async (context, next) =&gt; {
+        // do something with the context.Message
+    })
+    .Build();
+
+// invoke
+var x = new QueueMessageContext() { Message = msg, };
+
+await stack(x); // the whole stack is essentially a stacked function delegate. no magic anymore. no overhead despite millions of requests.
+</code></pre>
+<p>Using <code>System.Reactive</code> middlewares can be dynamically constructed</p>
+<pre><code class="language-csharp">var source = new Subject&lt;Message&gt;();
+
+var firstPart = source
+    .Select(msg =&gt; { /* do something */ return msg; }); // middleware step
+
+// somewhere else (e.g. on demand)
+var d = firstPart
+    .Select(msg =&gt; { /* do something */ return msg; }) // middleware step
+    .Subscribe(msg =&gt; /* do something */); // final handling of message
+
+// invoke
+source.next(msg); // subscriptions are checked, data is boxed, heap is allocated, ...
+</code></pre>
+<p>While a compiled middleware has the benefits of performance, a reactive stream can be dynamically composed, filtered and combined (like known from LINQ). It also allows multiple subscriptions which an ASP.NET Core middleware does not. However, there is also a disadvantage: It does not support async/await and will block the producer (exept explictely configured with <code>.ObserveOn</code>). It does not naturally fit to the common <code>async/await</code> programming pattern in C#.</p>
+<p>Within <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> there is a critical requirement to dynamically compose pipelines of the incoming upstream messages to models representing PoweredUP hubs and devices.</p>
+<blockquote class="blockquote">
+<p><code>System.Reactive</code> is therefore the right choice to use within the library. The library behaves similar to a user interface (PoweredUP devices &lt;-&gt; UI controls) with external influences. In the world of UI progamming, the reactive programming model is used by all currently popular frameworks  (React (Native), Angular, ...).</p>
+</blockquote>
+<p>For consumers of the library however, the <code>SharpBrick.PoweredUp</code> library exposes an async/await based interface for invocations. Internally, the library converts the subscriptions to the reactive stream into an <em>awaiter</em> using <code>.GetAwaiter()</code> as seen below in a request/response matching algorithm:</p>
+<pre><code class="language-csharp">public static async Task&lt;TResultMessage&gt; SendMessageReceiveResultAsync&lt;TResultMessage&gt;(this IPoweredUpProtocol self, PoweredUpMessage requestMessage, Func&lt;TResultMessage, bool&gt; filter = default)
+{
+    // UpstreamMessages is an IObservable
+    var awaitable = self.UpstreamMessages
+        .OfType&lt;TResultMessage&gt;()
+        .Where(responseMessage =&gt; filter == null || filter(responseMessage))
+        .FirstAsync() // only the first message observed is forwarded
+        .GetAwaiter(); // make sure the subscription is present at the moment the message is sent.
+
+    await self.SendMessageAsync(requestMessage);
+
+    var response = await awaitable; // subscription is discarded
+
+    return response;
+}
+</code></pre>
+<h2 id="conclusion">Conclusion</h2>
+<p>When building an application or a library with many variable exit points - may it be UI controls or other model endpoints - for an incoming data stream, using <code>System.Reactive</code> is the right choice.</p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET (2)</a>
-                <a role="button" href="/tags/xUnit" class="btn btn-default btn-xs">xUnit (1)</a>
-                <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming (1)</a>
-                <a role="button" href="/tags/Architecture" class="btn btn-default btn-xs">Architecture (1)</a>
-                <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-xs">ReactiveX (1)</a>
-                <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-xs">System.Reactive (1)</a>
-                <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-xs">VioletGrass.Middleware (1)</a>
-                <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-xs">SharpBrick.PoweredUp (1)</a>
-                <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-xs">PlatformIO (1)</a>
-                <a role="button" href="/tags/Notes" class="btn btn-default btn-xs">Notes (1)</a>
-                <a role="button" href="/tags/Introduction" class="btn btn-primary btn-xs">Introduction (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>

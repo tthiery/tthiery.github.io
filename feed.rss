@@ -5,8 +5,8 @@
 		<link>http://tthiery.github.io/</link>
 		<description>Welcome!</description>
 		<copyright>2020</copyright>
-		<pubDate>Sun, 19 Jul 2020 08:01:39 GMT</pubDate>
-		<lastBuildDate>Sun, 19 Jul 2020 08:01:39 GMT</lastBuildDate>
+		<pubDate>Sun, 19 Jul 2020 12:32:50 GMT</pubDate>
+		<lastBuildDate>Sun, 19 Jul 2020 12:32:50 GMT</lastBuildDate>
 		<item>
 			<title>xUnit Theories with Type Parameters</title>
 			<link>http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter</link>
@@ -49,6 +49,90 @@ public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messag
     =&amp;gt; HubPropertiesEncoder_Decode_UpdateUpstream(messageAsString, expectedProperty, expectedPropertyOperation, new Version(payload));
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;em&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; I google. This feature was surely somewhere mentioned before. I do not reference the material I googled, because I lost the link.&lt;/em&gt;&lt;/p&gt;
+</content:encoded>
+		</item>
+		<item>
+			<title>ReactiveX Middlewares</title>
+			<link>http://tthiery.github.io/posts/2020/06/12/reactivex-middlewares</link>
+			<description>&lt;p&gt;While implementing &lt;a href="https://github.com/sharpbrick/powered-up"&gt;sharpbrick/powered-up&lt;/a&gt; an interesting problem came up to solve: How to handle the incoming messages of the Bluetooth Low Energy based communication protocol. On top of the Bluetooth abstraction there is a simple callback which would receive roughly 50 different message types which would need dispatching to several locations, some locations would even spawn up dynamically over time. I needed an infrastructure! I needed a middleware 😀.&lt;/p&gt;</description>
+			<guid>http://tthiery.github.io/posts/2020/06/12/reactivex-middlewares</guid>
+			<pubDate>Fri, 12 Jun 2020 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;While implementing &lt;a href="https://github.com/sharpbrick/powered-up"&gt;sharpbrick/powered-up&lt;/a&gt; an interesting problem came up to solve: How to handle the incoming messages of the Bluetooth Low Energy based communication protocol. On top of the Bluetooth abstraction there is a simple callback which would receive roughly 50 different message types which would need dispatching to several locations, some locations would even spawn up dynamically over time. I needed an infrastructure! I needed a middleware 😀.&lt;/p&gt;
+&lt;h2 id="possible-solutions"&gt;Possible Solutions&lt;/h2&gt;
+&lt;p&gt;Within the tighter .NET ecosystem (a.k.a. everything what Microsoft and close friends throw at us) there are the following libraries for push based messaging:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;&lt;code&gt;System.Reactive&lt;/code&gt;&lt;/strong&gt;: The .NET implementation part (and godfather) of the ReactiveX project (e.g. JavaScript: &lt;code&gt;rxjs&lt;/code&gt;). The library is push-based, threading/buffering is optional, allow optional subscription, supports LINQ, allow building dynamic pipelines but is heap based.&lt;/li&gt;
+&lt;li&gt;ASP.NET Core &lt;strong&gt;middleware&lt;/strong&gt; stack. Unfortunately, in the current state bound to HTTP. Standalone implementations like &lt;a href="https://github.com/violetgrass/middleware"&gt;violetgrass/middleware&lt;/a&gt; (disclaimer: another side project) make the basic concept available to other server/dispatcher applications.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;System.Threading.Channels&lt;/code&gt;: A part of the ASP.NET Core stack, focused on channeling data between separate producer and consumer threads. The library is push- and pull-based, buffering is including, requires active consumers and does not support LINQ.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="middlewares"&gt;Middlewares&lt;/h2&gt;
+&lt;p&gt;Ignoring &lt;code&gt;System.Threading.Channels&lt;/code&gt; for now, both &lt;code&gt;System.Reactive&lt;/code&gt; and ASP.NET Core compiled middlewares are basically methods to build a series of functions between the place of source and an ultimate target&lt;/p&gt;
+&lt;p&gt;A compiled middleware is build upfront and is optimized on efficiency&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public class QueueMessageContext : Context
+{
+    public Message Message { get; set; }
+}
+
+var stack = new MiddlewareBuilder&amp;lt;QueueMessageContext&amp;gt;()
+    // middleware step
+    .Use(async (context, next) =&amp;gt; {
+        // do something with the context.Message
+        await next(context); 
+    })
+    // middleware step
+    .Use(async (context, next) =&amp;gt; {
+        // do something with the context.Message
+        await next(context); 
+    })
+    // final handling of message
+    .Use(async (context, next) =&amp;gt; {
+        // do something with the context.Message
+    })
+    .Build();
+
+// invoke
+var x = new QueueMessageContext() { Message = msg, };
+
+await stack(x); // the whole stack is essentially a stacked function delegate. no magic anymore. no overhead despite millions of requests.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using &lt;code&gt;System.Reactive&lt;/code&gt; middlewares can be dynamically constructed&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var source = new Subject&amp;lt;Message&amp;gt;();
+
+var firstPart = source
+    .Select(msg =&amp;gt; { /* do something */ return msg; }); // middleware step
+
+// somewhere else (e.g. on demand)
+var d = firstPart
+    .Select(msg =&amp;gt; { /* do something */ return msg; }) // middleware step
+    .Subscribe(msg =&amp;gt; /* do something */); // final handling of message
+
+// invoke
+source.next(msg); // subscriptions are checked, data is boxed, heap is allocated, ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;While a compiled middleware has the benefits of performance, a reactive stream can be dynamically composed, filtered and combined (like known from LINQ). It also allows multiple subscriptions which an ASP.NET Core middleware does not. However, there is also a disadvantage: It does not support async/await and will block the producer (exept explictely configured with &lt;code&gt;.ObserveOn&lt;/code&gt;). It does not naturally fit to the common &lt;code&gt;async/await&lt;/code&gt; programming pattern in C#.&lt;/p&gt;
+&lt;p&gt;Within &lt;a href="https://github.com/sharpbrick/powered-up"&gt;sharpbrick/powered-up&lt;/a&gt; there is a critical requirement to dynamically compose pipelines of the incoming upstream messages to models representing PoweredUP hubs and devices.&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;&lt;code&gt;System.Reactive&lt;/code&gt; is therefore the right choice to use within the library. The library behaves similar to a user interface (PoweredUP devices &amp;lt;-&amp;gt; UI controls) with external influences. In the world of UI progamming, the reactive programming model is used by all currently popular frameworks  (React (Native), Angular, ...).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;For consumers of the library however, the &lt;code&gt;SharpBrick.PoweredUp&lt;/code&gt; library exposes an async/await based interface for invocations. Internally, the library converts the subscriptions to the reactive stream into an &lt;em&gt;awaiter&lt;/em&gt; using &lt;code&gt;.GetAwaiter()&lt;/code&gt; as seen below in a request/response matching algorithm:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public static async Task&amp;lt;TResultMessage&amp;gt; SendMessageReceiveResultAsync&amp;lt;TResultMessage&amp;gt;(this IPoweredUpProtocol self, PoweredUpMessage requestMessage, Func&amp;lt;TResultMessage, bool&amp;gt; filter = default)
+{
+    // UpstreamMessages is an IObservable
+    var awaitable = self.UpstreamMessages
+        .OfType&amp;lt;TResultMessage&amp;gt;()
+        .Where(responseMessage =&amp;gt; filter == null || filter(responseMessage))
+        .FirstAsync() // only the first message observed is forwarded
+        .GetAwaiter(); // make sure the subscription is present at the moment the message is sent.
+
+    await self.SendMessageAsync(requestMessage);
+
+    var response = await awaitable; // subscription is discarded
+
+    return response;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusion"&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;When building an application or a library with many variable exit points - may it be UI controls or other model endpoints - for an incoming data stream, using &lt;code&gt;System.Reactive&lt;/code&gt; is the right choice.&lt;/p&gt;
 </content:encoded>
 		</item>
 		<item>

@@ -94,6 +94,12 @@
             <p class="post-meta">Posted on Wednesday, July 1, 2020</p>      
 <p>When unit testing generic protocols like the <a href="https://lego.github.io/lego-ble-wireless-protocol-docs">Lego Wireless Protocol</a> input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's <code>Assert.Equal(expected, actual)</code> methods has overloads for countless basic data types like <code>short</code>, <code>double</code>, <code>bool</code> and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.</p>        </div>   
         <div class="post-list">
+            <a href="/posts/2020/06/12/reactivex-middlewares">
+                <h3 class="post-title">ReactiveX Middlewares</h3>
+            </a>
+            <p class="post-meta">Posted on Friday, June 12, 2020</p>      
+<p>While implementing <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> an interesting problem came up to solve: How to handle the incoming messages of the Bluetooth Low Energy based communication protocol. On top of the Bluetooth abstraction there is a simple callback which would receive roughly 50 different message types which would need dispatching to several locations, some locations would even spawn up dynamically over time. I needed an infrastructure! I needed a middleware 😀.</p>        </div>   
+        <div class="post-list">
             <a href="/posts/2020/05/21/platformio-with-git">
                 <h3 class="post-title">Using PlatformIO and Git</h3>
             </a>
