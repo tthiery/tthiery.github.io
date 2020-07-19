@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<id>http://tthiery.github.io/</id>
-	<title>My Blog</title>
+	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2020</rights>
-	<updated>2020-07-19T12:32:50Z</updated>
-	<subtitle>Welcome!</subtitle>
+	<updated>2020-07-19T12:34:51Z</updated>
+	<subtitle>Welcome Builders!</subtitle>
 	<entry>
 		<id>http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter</id>
 		<title>xUnit Theories with Type Parameters</title>

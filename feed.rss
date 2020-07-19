@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <rss xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
 	<channel>
-		<title>My Blog</title>
+		<title>Journal</title>
 		<link>http://tthiery.github.io/</link>
-		<description>Welcome!</description>
+		<description>Welcome Builders!</description>
 		<copyright>2020</copyright>
-		<pubDate>Sun, 19 Jul 2020 12:32:50 GMT</pubDate>
-		<lastBuildDate>Sun, 19 Jul 2020 12:32:50 GMT</lastBuildDate>
+		<pubDate>Sun, 19 Jul 2020 12:34:51 GMT</pubDate>
+		<lastBuildDate>Sun, 19 Jul 2020 12:34:51 GMT</lastBuildDate>
 		<item>
 			<title>xUnit Theories with Type Parameters</title>
 			<link>http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter</link>
