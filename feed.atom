@@ -4,8 +4,52 @@
 	<title>My Blog</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2020</rights>
-	<updated>2020-07-18T23:19:23Z</updated>
+	<updated>2020-07-19T08:01:39Z</updated>
 	<subtitle>Welcome!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter</id>
+		<title>xUnit Theories with Type Parameters</title>
+		<link href="http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter" />
+		<updated>2020-07-01T00:00:00Z</updated>
+		<content>&lt;p&gt;When unit testing generic protocols like the &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs"&gt;Lego Wireless Protocol&lt;/a&gt; input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's &lt;code&gt;Assert.Equal(expected, actual)&lt;/code&gt; methods has overloads for countless basic data types like &lt;code&gt;short&lt;/code&gt;, &lt;code&gt;double&lt;/code&gt;, &lt;code&gt;bool&lt;/code&gt; and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.&lt;/p&gt;
+&lt;p&gt;While this works quite nice when using fixed unit tests where the actual/expected data type is part of the method, for xUnit &lt;strong&gt;theories&lt;/strong&gt; it need some more infrastructure in form of adding a type parameter to the unit test method.&lt;/p&gt;
+&lt;p&gt;Here an extract from the unit testing from the &lt;a href="https://github.com/sharpbrick/powered-up"&gt;sharpbrick/powered-up&lt;/a&gt; library.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;[Theory]
+[InlineData(&amp;quot;06-00-01-02-06-00&amp;quot;, HubProperty.Button, HubPropertyOperation.Update, false)]
+[InlineData(&amp;quot;06-00-01-02-06-01&amp;quot;, HubProperty.Button, HubPropertyOperation.Update, true)]
+[InlineData(&amp;quot;06-00-01-05-06-61&amp;quot;, HubProperty.Rssi, HubPropertyOperation.Update, (sbyte)97)]
+[InlineData(&amp;quot;06-00-01-06-06-64&amp;quot;, HubProperty.BatteryVoltage, HubPropertyOperation.Update, (byte)100)]
+[InlineData(&amp;quot;06-00-01-07-06-00&amp;quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.Normal)]
+[InlineData(&amp;quot;06-00-01-07-06-01&amp;quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.RechargeableBlock)]
+[InlineData(&amp;quot;06-00-01-0B-06-80&amp;quot;, HubProperty.SystemTypeId, HubPropertyOperation.Update, SystemType.LegoTechnic_MediumHub)]
+[InlineData(&amp;quot;06-00-01-0C-06-00&amp;quot;, HubProperty.HardwareNetworkId, HubPropertyOperation.Update, (byte)0)]
+public void HubPropertiesEncoder_Decode_UpdateUpstream&amp;lt;T&amp;gt;(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, T payload)
+{
+    // arrange
+    var data = BytesStringUtil.StringToData(messageAsString).AsSpan().Slice(3);
+
+    // act
+    var message = new HubPropertiesEncoder().Decode(0x00, data) as HubPropertyMessage&amp;lt;T&amp;gt;;
+
+    // assert
+    Assert.Equal(expectedProperty, message.Property);
+    Assert.Equal(expectedPropertyOperation, message.Operation);
+    Assert.Equal(payload, message.Payload);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The &lt;code&gt;payload&lt;/code&gt; parameter has a data type bound to a generic. When invoking the &lt;code&gt;[Theory]&lt;/code&gt; xUnit will actually instanciate the function with the suitable type parameter. As above, sometimes the &lt;code&gt;[InlineData(...)]&lt;/code&gt; entry needs to be hinted (e.g. &lt;code&gt;(sbyte)97&lt;/code&gt;), when C# defaults might lead to a wrong data type (e.g. &lt;code&gt;97&lt;/code&gt; is of data type &lt;code&gt;int&lt;/code&gt;).&lt;/p&gt;
+&lt;p&gt;When the &lt;code&gt;Attribute&lt;/code&gt;s of C# do not allow to instantiate a data type (typically classes), a adapter shim might help:&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;[Theory]
+[InlineData(&amp;quot;09-00-01-03-06-00-00-00-11&amp;quot;, HubProperty.FwVersion, HubPropertyOperation.Update, &amp;quot;1.1.0.0&amp;quot;)]
+[InlineData(&amp;quot;09-00-01-04-06-00-00-00-07&amp;quot;, HubProperty.HwVersion, HubPropertyOperation.Update, &amp;quot;0.7.0.0&amp;quot;)]
+[InlineData(&amp;quot;07-00-01-0A-06-00-03&amp;quot;, HubProperty.LegoWirelessProtocolVersion, HubPropertyOperation.Update, &amp;quot;3.0&amp;quot;)]
+public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, string payload)
+    =&amp;gt; HubPropertiesEncoder_Decode_UpdateUpstream(messageAsString, expectedProperty, expectedPropertyOperation, new Version(payload));
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Disclaimer:&lt;/strong&gt; I google. This feature was surely somewhere mentioned before. I do not reference the material I googled, because I lost the link.&lt;/em&gt;&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;When unit testing generic protocols like the &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs"&gt;Lego Wireless Protocol&lt;/a&gt; input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's &lt;code&gt;Assert.Equal(expected, actual)&lt;/code&gt; methods has overloads for countless basic data types like &lt;code&gt;short&lt;/code&gt;, &lt;code&gt;double&lt;/code&gt;, &lt;code&gt;bool&lt;/code&gt; and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2020/05/21/platformio-with-git</id>
 		<title>Using PlatformIO and Git</title>

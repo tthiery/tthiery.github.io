@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>My Blog - Introduction</title>
+        <title>My Blog - xUnit Theories with Type Parameters</title>
         <meta name="description" content="Welcome!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="My Blog" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="My Blog - Introduction" />
+        <meta property="og:title" content="My Blog - xUnit Theories with Type Parameters" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://tthiery.github.io/tags/Introduction" />
+        <meta property="og:url" content="http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -72,9 +72,19 @@
                         <div class="container">
                                 <div class="row">
                                         <div class="col-md-12">
-<div class="site-heading">
-    <h1>Introduction</h1>
-</div>                                            </div>
+
+    
+<div class="post-heading">
+    <h1>xUnit Theories with Type Parameters</h1>
+    <div class="meta">        
+Published on Wednesday, July 1, 2020<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming</a>
+                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-xs">xUnit</a>
+        </div>     
+</div>
+                                        </div>
                                 </div>
                         </div>
                 </header>
@@ -83,39 +93,47 @@
                 <div class="container">
                         <div class="row">
                                 <div id="content" class="col-md-12">
-                                        <div class="container-sm-height">
-    <div class="row row-sm-height">
-        <div class="col-sm-8 right-border col-sm-height">
-            
-        <div class="post-list">
-            <a href="/posts/2019/01/23/first-post">
-                <h3 class="post-title">First Post</h3>
-            </a>
-            <p class="post-meta">Posted on Wednesday, January 23, 2019</p>      
-<p>This is my first post!</p>        </div>   
+                                        
+
+<p>When unit testing generic protocols like the <a href="https://lego.github.io/lego-ble-wireless-protocol-docs">Lego Wireless Protocol</a> input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's <code>Assert.Equal(expected, actual)</code> methods has overloads for countless basic data types like <code>short</code>, <code>double</code>, <code>bool</code> and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.</p>
+<p>While this works quite nice when using fixed unit tests where the actual/expected data type is part of the method, for xUnit <strong>theories</strong> it need some more infrastructure in form of adding a type parameter to the unit test method.</p>
+<p>Here an extract from the unit testing from the <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> library.</p>
+<pre><code class="language-csharp">[Theory]
+[InlineData(&quot;06-00-01-02-06-00&quot;, HubProperty.Button, HubPropertyOperation.Update, false)]
+[InlineData(&quot;06-00-01-02-06-01&quot;, HubProperty.Button, HubPropertyOperation.Update, true)]
+[InlineData(&quot;06-00-01-05-06-61&quot;, HubProperty.Rssi, HubPropertyOperation.Update, (sbyte)97)]
+[InlineData(&quot;06-00-01-06-06-64&quot;, HubProperty.BatteryVoltage, HubPropertyOperation.Update, (byte)100)]
+[InlineData(&quot;06-00-01-07-06-00&quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.Normal)]
+[InlineData(&quot;06-00-01-07-06-01&quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.RechargeableBlock)]
+[InlineData(&quot;06-00-01-0B-06-80&quot;, HubProperty.SystemTypeId, HubPropertyOperation.Update, SystemType.LegoTechnic_MediumHub)]
+[InlineData(&quot;06-00-01-0C-06-00&quot;, HubProperty.HardwareNetworkId, HubPropertyOperation.Update, (byte)0)]
+public void HubPropertiesEncoder_Decode_UpdateUpstream&lt;T&gt;(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, T payload)
+{
+    // arrange
+    var data = BytesStringUtil.StringToData(messageAsString).AsSpan().Slice(3);
+
+    // act
+    var message = new HubPropertiesEncoder().Decode(0x00, data) as HubPropertyMessage&lt;T&gt;;
+
+    // assert
+    Assert.Equal(expectedProperty, message.Property);
+    Assert.Equal(expectedPropertyOperation, message.Operation);
+    Assert.Equal(payload, message.Payload);
+}
+</code></pre>
+<p>The <code>payload</code> parameter has a data type bound to a generic. When invoking the <code>[Theory]</code> xUnit will actually instanciate the function with the suitable type parameter. As above, sometimes the <code>[InlineData(...)]</code> entry needs to be hinted (e.g. <code>(sbyte)97</code>), when C# defaults might lead to a wrong data type (e.g. <code>97</code> is of data type <code>int</code>).</p>
+<p>When the <code>Attribute</code>s of C# do not allow to instantiate a data type (typically classes), a adapter shim might help:</p>
+<pre><code class="language-csharp">[Theory]
+[InlineData(&quot;09-00-01-03-06-00-00-00-11&quot;, HubProperty.FwVersion, HubPropertyOperation.Update, &quot;1.1.0.0&quot;)]
+[InlineData(&quot;09-00-01-04-06-00-00-00-07&quot;, HubProperty.HwVersion, HubPropertyOperation.Update, &quot;0.7.0.0&quot;)]
+[InlineData(&quot;07-00-01-0A-06-00-03&quot;, HubProperty.LegoWirelessProtocolVersion, HubPropertyOperation.Update, &quot;3.0&quot;)]
+public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, string payload)
+    =&gt; HubPropertiesEncoder_Decode_UpdateUpstream(messageAsString, expectedProperty, expectedPropertyOperation, new Version(payload));
+</code></pre>
+<p><em><strong>Disclaimer:</strong> I google. This feature was surely somewhere mentioned before. I do not reference the material I googled, because I lost the link.</em></p>
 
 
-            <nav>
-                <ul class="pager">
-                    <li class="previous">                
-                    </li>
-                    <li class="next">
-                    </li>
-                </ul>
-            </nav>
-            <hr class="visible-xs-block" />
-        </div>
-		
-        <div class="col-sm-4 col-sm-height">
-                <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-xs">PlatformIO (1)</a>
-                <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET (1)</a>
-                <a role="button" href="/tags/Notes" class="btn btn-default btn-xs">Notes (1)</a>
-                <a role="button" href="/tags/xUnit" class="btn btn-default btn-xs">xUnit (1)</a>
-                <a role="button" href="/tags/Introduction" class="btn btn-primary btn-xs">Introduction (1)</a>
-                <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming (1)</a>
-        </div>
-    </div>
-</div>
+
                                 </div>
                         </div>
                 </div>
