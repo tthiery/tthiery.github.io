@@ -89,6 +89,61 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos">
+                        <h2 class="post-title">LEGO Powered UP - Motor Modes POS and APOS</h2>
+                    </a>
+                    <p class="post-meta">Posted on Saturday, August 1, 2020</p>
+<p>The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes <code>POS</code> (reporting a position) and <code>APOS</code> (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"><code>StartSpeedForDegrees</code></a> and <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"><code>GotoAbsolutePosition</code></a>.</p>
+<p><strong>TL;DR</strong>: <code>GotoAbsolutePosition</code> does not orient itself on <code>APOS</code>. It is aligned with <code>POS</code>.</p>
+<p>And to put it in context, a memorable quote:</p>
+<blockquote class="blockquote">
+<p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
+<p>-- Phil Karlton</p>
+</blockquote>
+<h3 id="the-modes">The Modes</h3>
+<p>Let us start with the simple mode: <code>APOS</code> is the absolute position in degrees measured from a zero point. It goes from 0, 1 .. 179, 180 then to -180, -179, .., -1, 0. Simple, straight forward. For the current Control+ motors the zero point is physically not marked.</p>
+<p><code>POS</code> on the other hand is more complicated. The value 0 is aligned with the position of the motor was when the device was activated (most likely: put under power). From that moment on, it counts the degrees moved away from that position. And that number can get quite high (it is a <code>Int32</code>) and exceeds the traditional 0-360 degree range.</p>
+<p>An example</p>
+<ol>
+<li>Motor is put under power: <code>POS: 0</code></li>
+<li>Motor is moved by 30 degrees: <code>POS: 30</code></li>
+<li>Motor is moved by -70 degrees: <code>POS: -40</code></li>
+<li>Motor is further moved by two full turns (aka. -720 degrees) : <code>POS: -760</code></li>
+</ol>
+<h3 id="output-commands">Output Commands</h3>
+<p><a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"><code>StartSpeedForDegrees</code></a> moves the motor by the amount of degrees <strong>relative</strong> to the current position. If the motor is at <code>POS: 20</code> and the command is invoked with 5 degrees the motor is afterwards in <code>POS: 25</code>.</p>
+<p><a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"><code>GotoAbsolutePosition</code></a> moves the motor to a given <strong>absolute</strong> position <strong>within the range of <code>POS</code></strong>. An example: If the position is <code>POS: -760</code> and command is invoked with -40 the motor will make <em><strong>two full turns</strong></em> and is <em><strong>not oriented</strong></em> 40 degrees of the physical zero but -40 degrees of the initial position of the motor. Consequently it takes an <code>Int32</code> as a parameter.</p>
+<p>These <strong>two unexpected behaviors</strong> are traps when programming against the LEGO Wireless Protocol / Powered UP. They are a horrible user experience in regards to their naming (developer perspective). <strong>However, they are the correct interface and the right thing to do</strong>.</p>
+<p><em><strong>Note</strong>: This reflection is based on the Technic Control+ L/XL Linear Motors. There might be a different handling with different motors. I will update the post if I become aware of a difference.</em></p>
+<h3 id="adjust-the-mental-model">Adjust the mental model</h3>
+<ol>
+<li>For most use cases, an (physical) absolute position (<code>APOS</code>) is useless. A Technic axle can be connected in 3 wrong offsets compared to the pyhsical zero point of the motor (remember: unmarked). Even more interesting for gears.</li>
+<li><code>GotoAbsolutePosition</code> should be (mentally and in SDKs) named <code>GotoPosition</code> to better reflect the fact that it is aligned with the <code>POS</code> range and not the <code>APOS</code> range.
+<ul>
+<li>The two full turns can then easily be explained as the amount of degrees as a delta between the current pos and the targeted position the motor should go-to.</li>
+<li>The 40 degrees of the original motor position are also now okay, because that aligns with the understanding of <code>POS</code>.</li>
+</ul>
+</li>
+</ol>
+<p><em><strong>Note</strong>: As an alternative: Maybe <code>APOS</code> is wrongly named 😀. Or maybe we just need a proper documentation.</em></p>
+<h3 id="practical-usage-reset-zero">Practical Usage: Reset Zero</h3>
+<p>Assume a Technic Model with a steering. Magically it was calibrated to the center of your steer. The motor is at <code>POS: 254</code>.</p>
+<p>The question here is: What use does <code>GotoAbsolutePosition</code> bring? Well, there is the method <code>PresetEncoder</code>. It resets <code>POS</code> to zero. Applied here, <code>GotoAbsolutePosition</code> can now comfortable control the steering around the middle position (0) without doing complicated math otherwise needed when using <code>StartSpeedForDegrees</code>.</p>
+<h3 id="conclusions">Conclusions</h3>
+<p>Naming is hard. Documentation is sometimes a good idea.</p>
+<h3 id="appendix-users-of-sharpbrick.poweredup">Appendix: Users of SharpBrick.PoweredUp</h3>
+<p>The mentioned modes and commands are exposed using the following methods:</p>
+<ul>
+<li><code>POS</code> =&gt; <code>TachoMotor.PositionObservable</code></li>
+<li><code>APOS</code> =&gt; <code>AbsoluteMotor.AbsolutePositionObservable</code></li>
+<li><code>StartSpeedForDegrees</code> =&gt; <code>TachoMotor.StartSpeedForDegreesAsync</code></li>
+<li><code>GotoAbsolutePosition</code> =&gt; <code>AbsoluteMotor.GotoAbsolutePositionAsync</code>.</li>
+<li><code>PresetEncoder</code> =&gt; <code>TachoMotor.SetZeroAsync</code>.</li>
+</ul>
+<p>There might be a change coming which <a href="https://github.com/sharpbrick/powered-up/issues/74">renames</a> and <a href="https://github.com/sharpbrick/powered-up/issues/75">moves</a> <code>GotoAbsolutePosition</code>.</p>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/2020/07/01/xunit-with-generic-paramter">
                         <h2 class="post-title">xUnit Theories with Type Parameters</h2>
                     </a>
@@ -213,33 +268,6 @@ source.next(msg); // subscriptions are checked, data is boxed, heap is allocated
 <h2 id="conclusion">Conclusion</h2>
 <p>When building an application or a library with many variable exit points - may it be UI controls or other model endpoints - for an incoming data stream, using <code>System.Reactive</code> is the right choice.</p>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/2020/05/21/platformio-with-git">
-                        <h2 class="post-title">Using PlatformIO and Git</h2>
-                    </a>
-                    <p class="post-meta">Posted on Thursday, May 21, 2020</p>
-<p>When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.</p>
-<p>Simplified, the <code>platform.ini</code> contains references to the utilized SDKs and library dependencies. The only PlatformIO artifact are the <code>platform.ini</code> and the entry in the <code>extensions.json</code>.</p>
-<p><code>.gitignore</code> however, will have to contain some entries to avoid commiting the cached PlatformIO is using in form of <code>.pio</code>.</p>
-<h2 id="file-to-add-to-source-control">File to add to source control</h2>
-<ul>
-<li>.vscode
-<ul>
-<li>extensions.json</li>
-</ul>
-</li>
-<li>src/* (your source code)</li>
-<li>headers/* (your header)</li>
-<li>platform.ini</li>
-</ul>
-<h2 id="files-in.gitignore">Files in <code>.gitignore</code></h2>
-<ul>
-<li>.pio (excluding all the cached libraries and board files)</li>
-<li>.vscode/c_cpp_properties.json (cache over all C artifacts)</li>
-<li>.vscode/launch.json (hardcoded to local directory by default)</li>
-</ul>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -253,15 +281,15 @@ source.next(msg); // subscriptions are checked, data is boxed, heap is allocated
             <h5>Tags</h5>
             <div>
                     <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (2)</a>
+                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
+                    <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
+                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-sm"> Powered UP (1)</a>
                     <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (1)</a>
                     <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-sm"> System.Reactive (1)</a>
                     <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-sm"> ReactiveX (1)</a>
-                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
                     <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (1)</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (1)</a>
-                    <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
-                    <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
-                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -272,6 +300,7 @@ source.next(msg); // subscriptions are checked, data is boxed, heap is allocated
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/posts/2020/05/21/platformio-with-git">Using PlatformIO and Git</a></li>
                     <li><a href="/posts/2019/01/23/first-post">First Post</a></li>
             </ul>
                 <ul class="pager">

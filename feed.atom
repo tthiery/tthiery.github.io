@@ -4,8 +4,64 @@
 	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2020</rights>
-	<updated>2020-07-19T12:34:51Z</updated>
+	<updated>2020-08-01T07:52:08Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos</id>
+		<title>LEGO Powered UP - Motor Modes POS and APOS</title>
+		<link href="http://tthiery.github.io/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos" />
+		<updated>2020-08-01T00:00:00Z</updated>
+		<content>&lt;p&gt;The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes &lt;code&gt;POS&lt;/code&gt; (reporting a position) and &lt;code&gt;APOS&lt;/code&gt; (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"&gt;&lt;code&gt;StartSpeedForDegrees&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; does not orient itself on &lt;code&gt;APOS&lt;/code&gt;. It is aligned with &lt;code&gt;POS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;And to put it in context, a memorable quote:&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;There are only two hard things in Computer Science: cache invalidation and naming things.&lt;/p&gt;
+&lt;p&gt;-- Phil Karlton&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h3 id="the-modes"&gt;The Modes&lt;/h3&gt;
+&lt;p&gt;Let us start with the simple mode: &lt;code&gt;APOS&lt;/code&gt; is the absolute position in degrees measured from a zero point. It goes from 0, 1 .. 179, 180 then to -180, -179, .., -1, 0. Simple, straight forward. For the current Control+ motors the zero point is physically not marked.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;POS&lt;/code&gt; on the other hand is more complicated. The value 0 is aligned with the position of the motor was when the device was activated (most likely: put under power). From that moment on, it counts the degrees moved away from that position. And that number can get quite high (it is a &lt;code&gt;Int32&lt;/code&gt;) and exceeds the traditional 0-360 degree range.&lt;/p&gt;
+&lt;p&gt;An example&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Motor is put under power: &lt;code&gt;POS: 0&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Motor is moved by 30 degrees: &lt;code&gt;POS: 30&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Motor is moved by -70 degrees: &lt;code&gt;POS: -40&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Motor is further moved by two full turns (aka. -720 degrees) : &lt;code&gt;POS: -760&lt;/code&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h3 id="output-commands"&gt;Output Commands&lt;/h3&gt;
+&lt;p&gt;&lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"&gt;&lt;code&gt;StartSpeedForDegrees&lt;/code&gt;&lt;/a&gt; moves the motor by the amount of degrees &lt;strong&gt;relative&lt;/strong&gt; to the current position. If the motor is at &lt;code&gt;POS: 20&lt;/code&gt; and the command is invoked with 5 degrees the motor is afterwards in &lt;code&gt;POS: 25&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt;&lt;/a&gt; moves the motor to a given &lt;strong&gt;absolute&lt;/strong&gt; position &lt;strong&gt;within the range of &lt;code&gt;POS&lt;/code&gt;&lt;/strong&gt;. An example: If the position is &lt;code&gt;POS: -760&lt;/code&gt; and command is invoked with -40 the motor will make &lt;em&gt;&lt;strong&gt;two full turns&lt;/strong&gt;&lt;/em&gt; and is &lt;em&gt;&lt;strong&gt;not oriented&lt;/strong&gt;&lt;/em&gt; 40 degrees of the physical zero but -40 degrees of the initial position of the motor. Consequently it takes an &lt;code&gt;Int32&lt;/code&gt; as a parameter.&lt;/p&gt;
+&lt;p&gt;These &lt;strong&gt;two unexpected behaviors&lt;/strong&gt; are traps when programming against the LEGO Wireless Protocol / Powered UP. They are a horrible user experience in regards to their naming (developer perspective). &lt;strong&gt;However, they are the correct interface and the right thing to do&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note&lt;/strong&gt;: This reflection is based on the Technic Control+ L/XL Linear Motors. There might be a different handling with different motors. I will update the post if I become aware of a difference.&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="adjust-the-mental-model"&gt;Adjust the mental model&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;For most use cases, an (physical) absolute position (&lt;code&gt;APOS&lt;/code&gt;) is useless. A Technic axle can be connected in 3 wrong offsets compared to the pyhsical zero point of the motor (remember: unmarked). Even more interesting for gears.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt; should be (mentally and in SDKs) named &lt;code&gt;GotoPosition&lt;/code&gt; to better reflect the fact that it is aligned with the &lt;code&gt;POS&lt;/code&gt; range and not the &lt;code&gt;APOS&lt;/code&gt; range.
+&lt;ul&gt;
+&lt;li&gt;The two full turns can then easily be explained as the amount of degrees as a delta between the current pos and the targeted position the motor should go-to.&lt;/li&gt;
+&lt;li&gt;The 40 degrees of the original motor position are also now okay, because that aligns with the understanding of &lt;code&gt;POS&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note&lt;/strong&gt;: As an alternative: Maybe &lt;code&gt;APOS&lt;/code&gt; is wrongly named 😀. Or maybe we just need a proper documentation.&lt;/em&gt;&lt;/p&gt;
+&lt;h3 id="practical-usage-reset-zero"&gt;Practical Usage: Reset Zero&lt;/h3&gt;
+&lt;p&gt;Assume a Technic Model with a steering. Magically it was calibrated to the center of your steer. The motor is at &lt;code&gt;POS: 254&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The question here is: What use does &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; bring? Well, there is the method &lt;code&gt;PresetEncoder&lt;/code&gt;. It resets &lt;code&gt;POS&lt;/code&gt; to zero. Applied here, &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; can now comfortable control the steering around the middle position (0) without doing complicated math otherwise needed when using &lt;code&gt;StartSpeedForDegrees&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id="conclusions"&gt;Conclusions&lt;/h3&gt;
+&lt;p&gt;Naming is hard. Documentation is sometimes a good idea.&lt;/p&gt;
+&lt;h3 id="appendix-users-of-sharpbrick.poweredup"&gt;Appendix: Users of SharpBrick.PoweredUp&lt;/h3&gt;
+&lt;p&gt;The mentioned modes and commands are exposed using the following methods:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;POS&lt;/code&gt; =&amp;gt; &lt;code&gt;TachoMotor.PositionObservable&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;APOS&lt;/code&gt; =&amp;gt; &lt;code&gt;AbsoluteMotor.AbsolutePositionObservable&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;StartSpeedForDegrees&lt;/code&gt; =&amp;gt; &lt;code&gt;TachoMotor.StartSpeedForDegreesAsync&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt; =&amp;gt; &lt;code&gt;AbsoluteMotor.GotoAbsolutePositionAsync&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;PresetEncoder&lt;/code&gt; =&amp;gt; &lt;code&gt;TachoMotor.SetZeroAsync&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;There might be a change coming which &lt;a href="https://github.com/sharpbrick/powered-up/issues/74"&gt;renames&lt;/a&gt; and &lt;a href="https://github.com/sharpbrick/powered-up/issues/75"&gt;moves&lt;/a&gt; &lt;code&gt;GotoAbsolutePosition&lt;/code&gt;.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes &lt;code&gt;POS&lt;/code&gt; (reporting a position) and &lt;code&gt;APOS&lt;/code&gt; (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"&gt;&lt;code&gt;StartSpeedForDegrees&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2020/07/01/xunit-with-generic-paramter</id>
 		<title>xUnit Theories with Type Parameters</title>
