@@ -4,9 +4,207 @@
 		<title>Journal</title>
 		<link>http://tthiery.github.io/</link>
 		<description>Welcome Builders!</description>
-		<copyright>2020</copyright>
-		<pubDate>Sat, 01 Aug 2020 07:52:08 GMT</pubDate>
-		<lastBuildDate>Sat, 01 Aug 2020 07:52:08 GMT</lastBuildDate>
+		<copyright>2021</copyright>
+		<pubDate>Sat, 05 Jun 2021 15:29:16 GMT</pubDate>
+		<lastBuildDate>Sat, 05 Jun 2021 15:29:16 GMT</lastBuildDate>
+		<item>
+			<title>On Building a Middleware Framework</title>
+			<link>http://tthiery.github.io/posts/2021/06/05/on-building-middleware</link>
+			<description>&lt;p&gt;I am fascinated by Middleware Stacks. Middlewares help us to customize a function invocation (typically a request handler) with additional behavior before and after the invocation of function. Popular examples are authentication, logging or exception handling middlewares. Often they handle non-functional requirements (like logging, security, ...).&lt;/p&gt;</description>
+			<guid>http://tthiery.github.io/posts/2021/06/05/on-building-middleware</guid>
+			<pubDate>Sat, 05 Jun 2021 00:00:00 GMT</pubDate>
+			<content:encoded>&lt;p&gt;I am fascinated by Middleware Stacks. Middlewares help us to customize a function invocation (typically a request handler) with additional behavior before and after the invocation of function. Popular examples are authentication, logging or exception handling middlewares. Often they handle non-functional requirements (like logging, security, ...).&lt;/p&gt;
+&lt;p&gt;As a .NET developer I use daily the prominent middleware stack in ASP.NET Core. While beautifully abstracted and designed, there is however one big caveat: It is bound to HTTP request/response. Due to that limitation I built &lt;a href="https://github.com/violetgrass/middleware"&gt;violetgrass/middleware&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this article I try to discuss the various elements of a ASP.NET Core inspired middleware stack implemented in pure .NET.&lt;/p&gt;
+&lt;h2 id="the-delegate"&gt;The delegate&lt;/h2&gt;
+&lt;p&gt;A middleware is a stackable function. The function definition is called the &lt;code&gt;MiddlewareDelegate&lt;/code&gt; (ASP.NET Core: &lt;code&gt;RequestDelegate&lt;/code&gt;).&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public delegate Task MiddlewareDelegate&amp;lt;TContext&amp;gt;(TContext context) where TContext : Context;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The function expose the following characteristics:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Is is &lt;strong&gt;asynchronous&lt;/strong&gt;, since most likely, some part of the stack needs to access slowlier resources (e.g. a file system).&lt;/li&gt;
+&lt;li&gt;It receives an invocation &lt;strong&gt;context&lt;/strong&gt; (essentially the input and output of the function). (ASP.NET Core: &lt;code&gt;HttpContext&lt;/code&gt;).&lt;/li&gt;
+&lt;li&gt;It is a call without a return value.&lt;/li&gt;
+&lt;li&gt;It is stateless on its own (it is a function not an interface for a class).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;A simple message handler can be represented in the &lt;code&gt;MiddlewareDelegate&lt;/code&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;async Task HandleAsync(Context context)
+{
+    var message = GetMessageFromContext(context);
+    Console.WriteLine(message)
+}
+
+MiddlewareDelegate&amp;lt;Context&amp;gt; messageHandler = HandleAsync;
+
+var message = GetMessage();
+await messageHandler(message); // process the message.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A middleware however, is not only the final handler, but essentially everything in the &lt;strong&gt;middle&lt;/strong&gt; between the dispatching invoker and the terminal handler.
+In simple cases, this could be added programmatically.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;async Task HandleAsync(Context context) { /* see above */ }
+async Task LogAsync(Context context)
+{
+    Log.Write(&amp;quot;Before&amp;quot;);
+    await HandleAsync(context);
+    Log.Write(&amp;quot;After&amp;quot;);
+}
+async Task CatchExceptionAsync(Context context)
+{
+    try
+    {
+        await LogAsync(context);
+    }
+    catch { /* ... */ }
+}
+
+MiddlewareDelegate&amp;lt;Context&amp;gt; messageHandler = CatchExceptionAsync;
+
+var message = GetMessage();
+await messageHandler(message); // try-catch, log and process the message.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This method of coding exposes some issues&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The composition of the functions influences the actual code of the functions.&lt;/li&gt;
+&lt;li&gt;There is not methodology to integrate third parties or have out-of-the-box functionality.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-building-of-the-middleware-stack"&gt;The building of the middleware (stack)&lt;/h2&gt;
+&lt;p&gt;The purpose of using a middleware framework is to enable second and third party integrations into an efficient invocation stack. This includes all attributes of regular method stacking (like controlling the code before and after the invocation and handlings exceptions).&lt;/p&gt;
+&lt;p&gt;In a first step, the invocation of the next wrapped function needs to be parameterized.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;async Task LogAsync(MiddlewareDelegate&amp;lt;Context&amp;gt; next, Context context)
+{
+    Log.Write(&amp;quot;Before&amp;quot;);
+    await next(context);
+    Log.Write(&amp;quot;After&amp;quot;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;However, that would imply that the delegate is recursive and would differ between middleware (which need &lt;code&gt;next&lt;/code&gt;) and the terminal handler (which does not need &lt;code&gt;next&lt;/code&gt;). Closures to rescue which can bind additional variables not represented as function parameters. Closures need to be created by another function which holds the &amp;quot;closured&amp;quot; scope ...&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;MiddlewareDelegate&amp;lt;Context&amp;gt; LogFactory(MiddlewareDelegate&amp;lt;Context&amp;gt; next)
+{
+    return async (Context context) =&amp;gt; // = MiddlewareDelegate&amp;lt;Context&amp;gt;
+    { 
+        Log.Write(&amp;quot;Before&amp;quot;);
+        await next(context);
+        Log.Write(&amp;quot;After&amp;quot;);
+    };
+}
+
+// or in modern C# with local functions instead of lambdas.
+MiddlewareDelegate&amp;lt;Context&amp;gt; LogFactory(MiddlewareDelegate&amp;lt;Context&amp;gt; next)
+{
+    return LogAsync;
+
+    async Task LogAsync(Context context)
+    {
+        Log.Write(&amp;quot;Before&amp;quot;);
+        await next(context);
+        Log.Write(&amp;quot;After&amp;quot;);
+    }
+}
+
+// or if you like expression bodied member
+MiddlewareDelegate&amp;lt;Context&amp;gt; LogFactory(MiddlewareDelegate&amp;lt;Context&amp;gt; next)
+    =&amp;gt; async context =&amp;gt; {  Log.Write(&amp;quot;Before&amp;quot;); await next(context); Log.Write(&amp;quot;After&amp;quot;); };
+
+// or currying and first class functions
+Func&amp;lt;MiddlewareDelegate&amp;lt;Context&amp;gt;, MiddlewareDelegate&amp;lt;Context&amp;gt;&amp;gt; LogFactory = next =&amp;gt; async context =&amp;gt; {  Log.Write(&amp;quot;Before&amp;quot;); await next(context); Log.Write(&amp;quot;After&amp;quot;); };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This function which builds the middleware is called a &lt;strong&gt;middleware factory&lt;/strong&gt; (&lt;code&gt;Func&amp;lt;MiddlewareDelegate&amp;lt;TContext&amp;gt;, MiddlewareDelegate&amp;lt;TContext&amp;gt;&amp;gt;&lt;/code&gt;). It is a function which receives the &lt;code&gt;next&lt;/code&gt; element in the middleware stack to built and emits a function which represent the current middleware and all middleware later in the stack.&lt;/p&gt;
+&lt;p&gt;You can now write ..&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var messageHandlerStep3 = HandleAsync;
+var messageHandlerStep2 = LogFactory(messageHandlerStep3);
+var messageHandlerStep1 = CatchExceptionFactory(messageHandlerStep2);
+
+var message = GetMessage();
+await messageHandlerStep1(message); // try-catch, log and process the message.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;So now let us build a fancy builder infrastructure for it.&lt;/p&gt;
+&lt;p&gt;A &lt;code&gt;IMiddlewareBuilder&amp;lt;TContext&amp;gt;&lt;/code&gt; (ASP.NET Core: &lt;code&gt;IApplicationBuilder&lt;/code&gt;) collects a set of middleware factories.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public IMiddlewareBuilder&amp;lt;TContext&amp;gt; Use(Func&amp;lt;MiddlewareDelegate&amp;lt;TContext&amp;gt;, MiddlewareDelegate&amp;lt;TContext&amp;gt;&amp;gt; middlewareFactory)
+{
+    _factories.Add(middlewareFactory);
+
+    return this;
+}
+public MiddlewareDelegate&amp;lt;TContext&amp;gt; Build()
+{
+    _factories.Reverse();
+
+    MiddlewareDelegate&amp;lt;TContext&amp;gt; current = context =&amp;gt; Task.CompletedTask; // safeguard
+
+    foreach (var middlewareFactory in _factories)
+    {
+        current = middlewareFactory(current);
+    }
+
+    return current;
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note&lt;/strong&gt;: Ignoring all the interface definitions and additional features beyond middleware, this above is the complete business logic of violetgrass/middleware.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;The above Build method iterate each factory (in reverse order) and throw the built middleware function of the current factory as an input to the factory method of the next layer. An Build invocation might look like that ...&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;var messageHandler = new MiddlewareBuilder&amp;lt;Context&amp;gt;()
+    .Use(CatchExceptionFactory)
+    .Use(LogFactory)
+    .Use(next =&amp;gt; HandleAsync) // no use of next
+    .Build();
+    
+var message = GetMessage();
+await messageHandler(message); // try-catch, log and process the message.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="configuring-the-middleware"&gt;Configuring the Middleware&lt;/h2&gt;
+&lt;p&gt;With the use of C# extension methods, first and third party logic can be added to the &lt;code&gt;MiddlewareBuilder&lt;/code&gt;. The builder extension methods can be influenced by parameters, Dependency Injection and other sources of information.&lt;/p&gt;
+&lt;p&gt;Also, helper methods can be added to simplify the creation of middleware.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;// Typical third part integration
+public static class MiddlewareBuilderExtensions
+{
+    public static IMiddlewareBuilder&amp;lt;TContext&amp;gt; UseLog(this IMiddlewareBuilder&amp;lt;TContext&amp;gt; self, bool verboseLogging = false)
+    {
+        // this block is run when the builder (extension) methods are invoked (one-time).
+        // .. allows to perform configuration and collect metadata (e.g. via parameters or DI)
+        return self.Use(LogFactory);
+
+        MiddlewareDelegate&amp;lt;Context&amp;gt; LogFactory(MiddlewareDelegate&amp;lt;Context&amp;gt; next)
+        {
+            // this block is run when the middleware stack is actually build (one-time).
+            // .. the shape of the middleware is known at this moment
+            // .. has closure of configuration
+            return LogAsync;
+
+            async Task LogAsync(Context context)
+            {
+                // this block runs when the middleware stack is invoked (each-request)
+                // .. has closure of configuration
+                // .. has closure of shape
+
+                // as a middleware it encapsulates the next from the building time
+                if (verboseLogging) { Log.Write(&amp;quot;Before&amp;quot;); }
+                await next(context);
+                if (verboseLogging) { Log.Write(&amp;quot;After&amp;quot;); }
+            }
+        }
+    }
+}
+
+// simple helper functions
+public static partial class IMiddlewareBuilderExtensions
+{
+    public static IMiddlewareBuilder&amp;lt;TContext&amp;gt; Use&amp;lt;TContext&amp;gt;(this IMiddlewareBuilder&amp;lt;TContext&amp;gt; self, MiddlewareDelegate&amp;lt;TContext&amp;gt; middleware) where TContext : Context
+        =&amp;gt; self.Use(next =&amp;gt; async context =&amp;gt; { await middleware(context); await next(context); });
+}
+
+var messageHandler = new MiddlewareBuilder&amp;lt;Context&amp;gt;()
+    .UseExceptionHandling()
+    .UseLog(verbose: true)
+    .Use(HandleAsync)
+    .Build();
+    
+var message = GetMessage();
+await messageHandler(message); // try-catch, log and process the message.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id="conclusions"&gt;Conclusions&lt;/h2&gt;
+&lt;p&gt;This article hopefully gave an introduction into how the &lt;a href="https://github.com/violetgrass/middleware"&gt;violetgrass/middleware&lt;/a&gt; and ASP.NET Core middleware stack work. While sometimes it looks over-engineered, it is actually quite simple and a powerful extensibility framework.&lt;/p&gt;
+&lt;p&gt;There is more to typically middleware scenarios like dispatching and endpoint routing, however, this is material for other articles.&lt;/p&gt;
+</content:encoded>
+		</item>
 		<item>
 			<title>LEGO Powered UP - Motor Modes POS and APOS</title>
 			<link>http://tthiery.github.io/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos</link>
