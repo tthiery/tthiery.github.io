@@ -4,8 +4,134 @@
 	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2021</rights>
-	<updated>2021-06-05T15:29:16Z</updated>
+	<updated>2021-07-25T18:52:17Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2021/07/10/extension-methods</id>
+		<title>Extension Methods</title>
+		<link href="http://tthiery.github.io/posts/2021/07/10/extension-methods" />
+		<updated>2021-07-10T00:00:00Z</updated>
+		<content>&lt;p&gt;Extension Methods in C# are a crucial element of modern .NET. They are the foundation of LINQ and used everywhere. However, the are sometimes considered as a bad smell when it comes to code reviewing. In this article I want to discuss the concept of extension methods and its position in the OO patterns &amp;amp; principles.&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;&lt;strong&gt;Note&lt;/strong&gt;: Extension Methods are often used to build domain specific languages (might it be a SwiftUI-alike, a mocking specification system, ...). Everything goes in this space. The target there is the newly constructed language. In this article, I discuss the integration into the regular C# programming language and not a specialization of it.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="solid-principles"&gt;SOLID Principles&lt;/h2&gt;
+&lt;p&gt;SOLID principles are a corner stone of object oriented design.&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;S&lt;/strong&gt; ingle Responsibility Principle (&lt;em&gt;SRP&lt;/em&gt;): &amp;quot;There should never be more than one reason for a class to change.&amp;quot; In other words, every class should have only one responsibility.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;O&lt;/strong&gt; pen Closed Principle (&lt;em&gt;OCP&lt;/em&gt;): &amp;quot;Software entities ... should be open for extension, but closed for modification.&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;L&lt;/strong&gt; iskov Substitution Principle (&lt;em&gt;LSP&lt;/em&gt;): &amp;quot;Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it&amp;quot;. See also design by contract.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;I&lt;/strong&gt; nterface Segregation Principle (&lt;em&gt;ISP&lt;/em&gt;):  &amp;quot;Many client-specific interfaces are better than one general-purpose interface.&amp;quot;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;D&lt;/strong&gt; ependency Inversion Principle (&lt;em&gt;DIP&lt;/em&gt;): &amp;quot;Depend upon abstractions, not concretions.&amp;quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;-- via &lt;a href="https://en.wikipedia.org/wiki/SOLID"&gt;Wikipedia&lt;/a&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id="soft-skills-of-code"&gt;Soft Skills (of Code)&lt;/h2&gt;
+&lt;p&gt;Under the world of patterns and principles there are also soft skills 😀.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Readability&lt;/strong&gt;: Code is read 100 times as often as it is created or modified. It is read in full fledged editors or in a diff tool on the command line without even syntax highlighting. Regular (as in 99% of) code has to be optimized for readability.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Usability&lt;/strong&gt;: When writing function with the intention of other developers using it, usability is a concern. The definition of the function as well as its integration into the workflow of the user in the IDE matters here.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="the-evaluation"&gt;The Evaluation&lt;/h2&gt;
+&lt;p&gt;So are exension methods violating these principles? Are they a bad thing in software design?&lt;/p&gt;
+&lt;p&gt;Let us dissect different use cases!&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Extending fundamental base types&lt;/strong&gt;: Adding an extension method to a base type.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;string foo = &amp;quot;Hello World&amp;quot;;
+
+var hash = foo.HashSha1();
+
+// vs. static method
+var has = Sha1.Hash(foo);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;❌ Single Responsibility: There is no space for hashing in strings. &lt;code&gt;.WordCount()&lt;/code&gt; or &lt;code&gt;.IsASCII()&lt;/code&gt; maybe, because the contribute to the responsibility to represent text. But Hash is a different domain. The responsibility of hashing and the responsibility of text representation does not intersect. This usage only moves the argument from the braces to the context.&lt;/p&gt;
+&lt;p&gt;❌ Readability: There is no gain versus the usage in traditional static methods. The extension method feels like a transformation, the static method invocation like a function call. Both are fundamentally well understood concept when reading code. Both are valid patterns in object oriented programming and functional programming. The significant negative thing the extension method does is hiding the ownership of the function.&lt;/p&gt;
+&lt;p&gt;❌ Usability: There is no benefit in the general usability either. Auto-Completion would be cluttered with suggestions of countless domains. Namespace (and by extend static class names) with &lt;code&gt;using&lt;/code&gt;, &lt;code&gt;static using&lt;/code&gt; and &lt;code&gt;global using&lt;/code&gt; have a rationale to exist, which is de-cluttering the global namespace and resolving potential conflicts in naming. Extension methods are typically attached to more generic namespaces to unfold their availability.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Throw helpers&lt;/strong&gt;: Simplify your parameter guards by using one-line-extension methods.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public void Execute(string command, int count)
+{
+    command.ThrowIfNullOrEmpty();
+    count.ThrowIfSmallerThan(0);
+    // ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;❌ Single Responsibility: See above.&lt;/p&gt;
+&lt;p&gt;❌ Readability: See above.&lt;/p&gt;
+&lt;p&gt;❌ Usability: See above. It is even worse here, since the contributed functions are only for a special purpose which is only used at the beginning of a function.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Extending the capabilities&lt;/strong&gt;: Adding new capabilities to a type.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;public interface ILogger { void Log(string text); }
+
+ILogger log = GetLogger();
+log.LogDebug();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;✅ Single Responsibility Principle: Not violated. LogDebug contributes to the responsibility of &lt;code&gt;ILogger&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;✅ Open-Close Principle: &lt;code&gt;ILogger&lt;/code&gt; is not modified (it remains closed). However, C# extension methods make it Open for &lt;strong&gt;extensions&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;✅ Liskov Substitution Principle: Another implementation of &lt;code&gt;ILogger&lt;/code&gt;  (or another derived class of a default logger) can be provided without being influenced by the extension mehtod. The extension methods, like other consumers expect an unchanged behavior. Another consumer of &lt;code&gt;ILogger&lt;/code&gt; interface (old and new implementation) would not be influenced.&lt;/p&gt;
+&lt;p&gt;✅ Interface Segregation Principle: &lt;code&gt;LogDebug&lt;/code&gt; and &lt;code&gt;Log&lt;/code&gt; are contracted separately from each other (they come from different types), so the interface was segregated and can be modified independently.&lt;/p&gt;
+&lt;p&gt;🕵️‍♀️ Dependency Inversion Principle: There is no abstraction here. The extension method cannot be provided by a third party (like a DI container) and abstracted by an interface. It is a static method.&lt;/p&gt;
+&lt;p&gt;✅ Readability: The contributed extended method intents to extend the capability of the original type. It belongs to the type in regards of the &lt;em&gt;SRP&lt;/em&gt;. Additionally - in this example and as a recommendation - the extension method naming is adjusted to the target type helping the reader to understand the purpose.&lt;/p&gt;
+&lt;p&gt;✅ Usability: The extension method improves the usability by making the functionality available with Intellisense.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Bridging Domains&lt;/strong&gt;: Adding capabilities to one domain by attaching another domain.&lt;/p&gt;
+&lt;pre&gt;&lt;code class="language-csharp"&gt;void Configure(IServiceCollection services)
+{
+    services
+        .AddLogging()
+        .AddMvc();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;✅ Single Responsibility Principle: &lt;code&gt;.AddLogging()&lt;/code&gt; contributes to the DI Container building capability of &lt;code&gt;IServiceCollection&lt;/code&gt;. It also has the responsbility of initializing the &lt;code&gt;ILogger&lt;/code&gt; infrastructure withing the Logging subsystem. Therefore, &lt;code&gt;.AddLogging()&lt;/code&gt; has no place in implementation or the interface of &lt;code&gt;IServiceCollection&lt;/code&gt; but is an ideal candiate for extension methods (even in the same assembly and direct next to the extended type).&lt;/p&gt;
+&lt;svg height="210" width="500"&gt;
+  &lt;rect  x="185" y="10" rx="10" width="305" height="180" style="fill:blue;opacity:0.3" /&gt;
+  &lt;text x="280" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5"&gt;Assembly: Logging&lt;/text&gt;
+  &lt;rect  x="10" y="10" rx="10" width="170" height="180" style="fill:red;opacity:0.3" /&gt;
+  &lt;text x="20" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5"&gt;Assembly: DependencyInjection&lt;/text&gt;
+  &lt;circle cx="100" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent"&gt;
+  &lt;/circle&gt;
+  &lt;text x="60" y="70" style="fill:white;font-size:8pt;text-decoration:underline;"&gt;IServiceCollection&lt;/text&gt;
+  &lt;text x="60" y="85" style="fill:white;font-size:8pt;"&gt;+ AddSingleton&lt;/text&gt;
+  &lt;text x="60" y="100" style="fill:white;font-size:8pt;"&gt;+ AddTransient&lt;/text&gt;
+  &lt;text x="60" y="115" style="fill:white;font-size:8pt;"&gt;+ BuildServiceProvider&lt;/text&gt;
+  &lt;ellipse cx="150" cy="100" rx="130" ry="100" style="stroke:red;stroke-width:2px;fill:transparent" /&gt;
+  &lt;text x="190" y="85" style="fill:white;font-size:8pt;"&gt;+ AddLogging&lt;/text&gt;
+  &lt;circle cx="400" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent"&gt;
+  &lt;/circle&gt;
+  &lt;line x1="260" y1="82" x2="330" y2="82" style="stroke:gray;stroke-width:2" /&gt;
+&lt;/svg&gt;
+&lt;p&gt;✅ Open-Close Principle: &lt;code&gt;IServiceCollection&lt;/code&gt; is not modified as Logging does not contribute to its domain and there is no need to change it since consumers can only use &lt;code&gt;.AddSingleton()&lt;/code&gt; or &lt;code&gt;.AddTransient()&lt;/code&gt;. The interface remains closed. However, C# extension methods make it Open for &lt;strong&gt;extensions&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;✅ Liskov Substitution Principle: See above.&lt;/p&gt;
+&lt;p&gt;✅ Interface Segregation Principle: See above. Extension methods are an valid method to segregate the interface into smaller parts (here the segregated specialization into the bridged technology). Extensions methods also do not contribute to the single-inheritance limitation (which extension derives in which order and are all known) and effectively form segregated interfaces.&lt;/p&gt;
+&lt;svg height="300" width="500"&gt;
+  &lt;rect  x="185" y="10" rx="10" width="120" height="180" style="fill:blue;opacity:0.3" /&gt;
+  &lt;text x="200" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5"&gt;Assembly: Logging&lt;/text&gt;
+  &lt;rect  x="10" y="10" rx="10" width="170" height="180" style="fill:red;opacity:0.3" /&gt;
+  &lt;text x="20" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5"&gt;Assembly: DependencyInjection&lt;/text&gt;
+  &lt;rect  x="10" y="200" rx="10" width="170" height="90" style="fill:orange;opacity:0.3" /&gt;
+  &lt;text x="20" y="215" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5"&gt;Assembly: AspNetCore&lt;/text&gt;
+  &lt;circle cx="100" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent"&gt;
+  &lt;/circle&gt;
+  &lt;text x="60" y="70" style="fill:white;font-size:8pt;text-decoration:underline;"&gt;IServiceCollection&lt;/text&gt;
+  &lt;text x="60" y="85" style="fill:white;font-size:8pt;"&gt;+ AddSingleton&lt;/text&gt;
+  &lt;text x="60" y="100" style="fill:white;font-size:8pt;"&gt;+ AddTransient&lt;/text&gt;
+  &lt;text x="60" y="115" style="fill:white;font-size:8pt;"&gt;+ BuildServiceProvider&lt;/text&gt;
+  &lt;ellipse cx="150" cy="100" rx="130" ry="100" style="stroke:red;stroke-width:2px;fill:transparent" /&gt;
+  &lt;text x="190" y="85" style="fill:white;font-size:8pt;"&gt;+ AddLogging&lt;/text&gt;
+  &lt;ellipse cx="100" cy="150" rx="100" ry="130" style="stroke:red;stroke-width:2px;fill:transparent" /&gt;
+  &lt;text x="60" y="235" style="fill:white;font-size:8pt;"&gt;+ AddMvc&lt;/text&gt;
+&lt;/svg&gt;
+&lt;p&gt;🕵️‍♀️ Dependency Inversion Principle: See above.&lt;/p&gt;
+&lt;p&gt;✅ Readability: See above.&lt;/p&gt;
+&lt;p&gt;✅ Usability: See above.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="summary"&gt;Summary&lt;/h2&gt;
+&lt;p&gt;Not all extension method use cases are really good usages when it comes to object-oriented programming. However, there are plenty of good ones.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;strong&gt;Note&lt;/strong&gt;: I will continually update this article when I see proper use cases which are interesting to document.&lt;/em&gt;&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;Extension Methods in C# are a crucial element of modern .NET. They are the foundation of LINQ and used everywhere. However, the are sometimes considered as a bad smell when it comes to code reviewing. In this article I want to discuss the concept of extension methods and its position in the OO patterns &amp;amp; principles.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2021/06/05/on-building-middleware</id>
 		<title>On Building a Middleware Framework</title>

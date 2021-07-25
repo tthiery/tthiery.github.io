@@ -89,6 +89,131 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/2021/07/10/extension-methods">
+                        <h2 class="post-title">Extension Methods</h2>
+                    </a>
+                    <p class="post-meta">Posted on Saturday, July 10, 2021</p>
+<p>Extension Methods in C# are a crucial element of modern .NET. They are the foundation of LINQ and used everywhere. However, the are sometimes considered as a bad smell when it comes to code reviewing. In this article I want to discuss the concept of extension methods and its position in the OO patterns &amp; principles.</p>
+<blockquote class="blockquote">
+<p><strong>Note</strong>: Extension Methods are often used to build domain specific languages (might it be a SwiftUI-alike, a mocking specification system, ...). Everything goes in this space. The target there is the newly constructed language. In this article, I discuss the integration into the regular C# programming language and not a specialization of it.</p>
+</blockquote>
+<h2 id="solid-principles">SOLID Principles</h2>
+<p>SOLID principles are a corner stone of object oriented design.</p>
+<blockquote class="blockquote">
+<ul>
+<li><strong>S</strong> ingle Responsibility Principle (<em>SRP</em>): &quot;There should never be more than one reason for a class to change.&quot; In other words, every class should have only one responsibility.</li>
+<li><strong>O</strong> pen Closed Principle (<em>OCP</em>): &quot;Software entities ... should be open for extension, but closed for modification.&quot;</li>
+<li><strong>L</strong> iskov Substitution Principle (<em>LSP</em>): &quot;Functions that use pointers or references to base classes must be able to use objects of derived classes without knowing it&quot;. See also design by contract.</li>
+<li><strong>I</strong> nterface Segregation Principle (<em>ISP</em>):  &quot;Many client-specific interfaces are better than one general-purpose interface.&quot;</li>
+<li><strong>D</strong> ependency Inversion Principle (<em>DIP</em>): &quot;Depend upon abstractions, not concretions.&quot;</li>
+</ul>
+<p>-- via <a href="https://en.wikipedia.org/wiki/SOLID">Wikipedia</a></p>
+</blockquote>
+<h2 id="soft-skills-of-code">Soft Skills (of Code)</h2>
+<p>Under the world of patterns and principles there are also soft skills 😀.</p>
+<ul>
+<li><strong>Readability</strong>: Code is read 100 times as often as it is created or modified. It is read in full fledged editors or in a diff tool on the command line without even syntax highlighting. Regular (as in 99% of) code has to be optimized for readability.</li>
+<li><strong>Usability</strong>: When writing function with the intention of other developers using it, usability is a concern. The definition of the function as well as its integration into the workflow of the user in the IDE matters here.</li>
+</ul>
+<h2 id="the-evaluation">The Evaluation</h2>
+<p>So are exension methods violating these principles? Are they a bad thing in software design?</p>
+<p>Let us dissect different use cases!</p>
+<ul>
+<li><p><strong>Extending fundamental base types</strong>: Adding an extension method to a base type.</p>
+<pre><code class="language-csharp">string foo = &quot;Hello World&quot;;
+
+var hash = foo.HashSha1();
+
+// vs. static method
+var has = Sha1.Hash(foo);
+</code></pre>
+<p>❌ Single Responsibility: There is no space for hashing in strings. <code>.WordCount()</code> or <code>.IsASCII()</code> maybe, because the contribute to the responsibility to represent text. But Hash is a different domain. The responsibility of hashing and the responsibility of text representation does not intersect. This usage only moves the argument from the braces to the context.</p>
+<p>❌ Readability: There is no gain versus the usage in traditional static methods. The extension method feels like a transformation, the static method invocation like a function call. Both are fundamentally well understood concept when reading code. Both are valid patterns in object oriented programming and functional programming. The significant negative thing the extension method does is hiding the ownership of the function.</p>
+<p>❌ Usability: There is no benefit in the general usability either. Auto-Completion would be cluttered with suggestions of countless domains. Namespace (and by extend static class names) with <code>using</code>, <code>static using</code> and <code>global using</code> have a rationale to exist, which is de-cluttering the global namespace and resolving potential conflicts in naming. Extension methods are typically attached to more generic namespaces to unfold their availability.</p>
+</li>
+<li><p><strong>Throw helpers</strong>: Simplify your parameter guards by using one-line-extension methods.</p>
+<pre><code class="language-csharp">public void Execute(string command, int count)
+{
+    command.ThrowIfNullOrEmpty();
+    count.ThrowIfSmallerThan(0);
+    // ...
+</code></pre>
+<p>❌ Single Responsibility: See above.</p>
+<p>❌ Readability: See above.</p>
+<p>❌ Usability: See above. It is even worse here, since the contributed functions are only for a special purpose which is only used at the beginning of a function.</p>
+</li>
+<li><p><strong>Extending the capabilities</strong>: Adding new capabilities to a type.</p>
+<pre><code class="language-csharp">public interface ILogger { void Log(string text); }
+
+ILogger log = GetLogger();
+log.LogDebug();
+</code></pre>
+<p>✅ Single Responsibility Principle: Not violated. LogDebug contributes to the responsibility of <code>ILogger</code>.</p>
+<p>✅ Open-Close Principle: <code>ILogger</code> is not modified (it remains closed). However, C# extension methods make it Open for <strong>extensions</strong>.</p>
+<p>✅ Liskov Substitution Principle: Another implementation of <code>ILogger</code>  (or another derived class of a default logger) can be provided without being influenced by the extension mehtod. The extension methods, like other consumers expect an unchanged behavior. Another consumer of <code>ILogger</code> interface (old and new implementation) would not be influenced.</p>
+<p>✅ Interface Segregation Principle: <code>LogDebug</code> and <code>Log</code> are contracted separately from each other (they come from different types), so the interface was segregated and can be modified independently.</p>
+<p>🕵️‍♀️ Dependency Inversion Principle: There is no abstraction here. The extension method cannot be provided by a third party (like a DI container) and abstracted by an interface. It is a static method.</p>
+<p>✅ Readability: The contributed extended method intents to extend the capability of the original type. It belongs to the type in regards of the <em>SRP</em>. Additionally - in this example and as a recommendation - the extension method naming is adjusted to the target type helping the reader to understand the purpose.</p>
+<p>✅ Usability: The extension method improves the usability by making the functionality available with Intellisense.</p>
+</li>
+<li><p><strong>Bridging Domains</strong>: Adding capabilities to one domain by attaching another domain.</p>
+<pre><code class="language-csharp">void Configure(IServiceCollection services)
+{
+    services
+        .AddLogging()
+        .AddMvc();
+}
+</code></pre>
+<p>✅ Single Responsibility Principle: <code>.AddLogging()</code> contributes to the DI Container building capability of <code>IServiceCollection</code>. It also has the responsbility of initializing the <code>ILogger</code> infrastructure withing the Logging subsystem. Therefore, <code>.AddLogging()</code> has no place in implementation or the interface of <code>IServiceCollection</code> but is an ideal candiate for extension methods (even in the same assembly and direct next to the extended type).</p>
+<svg height="210" width="500">
+  <rect  x="185" y="10" rx="10" width="305" height="180" style="fill:blue;opacity:0.3" />
+  <text x="280" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5">Assembly: Logging</text>
+  <rect  x="10" y="10" rx="10" width="170" height="180" style="fill:red;opacity:0.3" />
+  <text x="20" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5">Assembly: DependencyInjection</text>
+  <circle cx="100" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent">
+  </circle>
+  <text x="60" y="70" style="fill:white;font-size:8pt;text-decoration:underline;">IServiceCollection</text>
+  <text x="60" y="85" style="fill:white;font-size:8pt;">+ AddSingleton</text>
+  <text x="60" y="100" style="fill:white;font-size:8pt;">+ AddTransient</text>
+  <text x="60" y="115" style="fill:white;font-size:8pt;">+ BuildServiceProvider</text>
+  <ellipse cx="150" cy="100" rx="130" ry="100" style="stroke:red;stroke-width:2px;fill:transparent" />
+  <text x="190" y="85" style="fill:white;font-size:8pt;">+ AddLogging</text>
+  <circle cx="400" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent">
+  </circle>
+  <line x1="260" y1="82" x2="330" y2="82" style="stroke:gray;stroke-width:2" />
+</svg>
+<p>✅ Open-Close Principle: <code>IServiceCollection</code> is not modified as Logging does not contribute to its domain and there is no need to change it since consumers can only use <code>.AddSingleton()</code> or <code>.AddTransient()</code>. The interface remains closed. However, C# extension methods make it Open for <strong>extensions</strong>.</p>
+<p>✅ Liskov Substitution Principle: See above.</p>
+<p>✅ Interface Segregation Principle: See above. Extension methods are an valid method to segregate the interface into smaller parts (here the segregated specialization into the bridged technology). Extensions methods also do not contribute to the single-inheritance limitation (which extension derives in which order and are all known) and effectively form segregated interfaces.</p>
+<svg height="300" width="500">
+  <rect  x="185" y="10" rx="10" width="120" height="180" style="fill:blue;opacity:0.3" />
+  <text x="200" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5">Assembly: Logging</text>
+  <rect  x="10" y="10" rx="10" width="170" height="180" style="fill:red;opacity:0.3" />
+  <text x="20" y="25" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5">Assembly: DependencyInjection</text>
+  <rect  x="10" y="200" rx="10" width="170" height="90" style="fill:orange;opacity:0.3" />
+  <text x="20" y="215" style="fill:white;font-size:8pt;text-decoration:underline;opacity:0.5">Assembly: AspNetCore</text>
+  <circle cx="100" cy="100" r="70" style="stroke:green;stroke-width:3px;fill:transparent">
+  </circle>
+  <text x="60" y="70" style="fill:white;font-size:8pt;text-decoration:underline;">IServiceCollection</text>
+  <text x="60" y="85" style="fill:white;font-size:8pt;">+ AddSingleton</text>
+  <text x="60" y="100" style="fill:white;font-size:8pt;">+ AddTransient</text>
+  <text x="60" y="115" style="fill:white;font-size:8pt;">+ BuildServiceProvider</text>
+  <ellipse cx="150" cy="100" rx="130" ry="100" style="stroke:red;stroke-width:2px;fill:transparent" />
+  <text x="190" y="85" style="fill:white;font-size:8pt;">+ AddLogging</text>
+  <ellipse cx="100" cy="150" rx="100" ry="130" style="stroke:red;stroke-width:2px;fill:transparent" />
+  <text x="60" y="235" style="fill:white;font-size:8pt;">+ AddMvc</text>
+</svg>
+<p>🕵️‍♀️ Dependency Inversion Principle: See above.</p>
+<p>✅ Readability: See above.</p>
+<p>✅ Usability: See above.</p>
+</li>
+</ul>
+<h2 id="summary">Summary</h2>
+<p>Not all extension method use cases are really good usages when it comes to object-oriented programming. However, there are plenty of good ones.</p>
+<p><em><strong>Note</strong>: I will continually update this article when I see proper use cases which are interesting to document.</em></p>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/2021/06/05/on-building-middleware">
                         <h2 class="post-title">On Building a Middleware Framework</h2>
                     </a>
@@ -339,49 +464,6 @@ await messageHandler(message); // try-catch, log and process the message.
 </ul>
 <p>There might be a change coming which <a href="https://github.com/sharpbrick/powered-up/issues/74">renames</a> and <a href="https://github.com/sharpbrick/powered-up/issues/75">moves</a> <code>GotoAbsolutePosition</code>.</p>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/2020/07/01/xunit-with-generic-paramter">
-                        <h2 class="post-title">xUnit Theories with Type Parameters</h2>
-                    </a>
-                    <p class="post-meta">Posted on Wednesday, July 1, 2020</p>
-<p>When unit testing generic protocols like the <a href="https://lego.github.io/lego-ble-wireless-protocol-docs">Lego Wireless Protocol</a> input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's <code>Assert.Equal(expected, actual)</code> methods has overloads for countless basic data types like <code>short</code>, <code>double</code>, <code>bool</code> and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.</p>
-<p>While this works quite nice when using fixed unit tests where the actual/expected data type is part of the method, for xUnit <strong>theories</strong> it need some more infrastructure in form of adding a type parameter to the unit test method.</p>
-<p>Here an extract from the unit testing from the <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> library.</p>
-<pre><code class="language-csharp">[Theory]
-[InlineData(&quot;06-00-01-02-06-00&quot;, HubProperty.Button, HubPropertyOperation.Update, false)]
-[InlineData(&quot;06-00-01-02-06-01&quot;, HubProperty.Button, HubPropertyOperation.Update, true)]
-[InlineData(&quot;06-00-01-05-06-61&quot;, HubProperty.Rssi, HubPropertyOperation.Update, (sbyte)97)]
-[InlineData(&quot;06-00-01-06-06-64&quot;, HubProperty.BatteryVoltage, HubPropertyOperation.Update, (byte)100)]
-[InlineData(&quot;06-00-01-07-06-00&quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.Normal)]
-[InlineData(&quot;06-00-01-07-06-01&quot;, HubProperty.BatteryType, HubPropertyOperation.Update, BatteryType.RechargeableBlock)]
-[InlineData(&quot;06-00-01-0B-06-80&quot;, HubProperty.SystemTypeId, HubPropertyOperation.Update, SystemType.LegoTechnic_MediumHub)]
-[InlineData(&quot;06-00-01-0C-06-00&quot;, HubProperty.HardwareNetworkId, HubPropertyOperation.Update, (byte)0)]
-public void HubPropertiesEncoder_Decode_UpdateUpstream&lt;T&gt;(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, T payload)
-{
-    // arrange
-    var data = BytesStringUtil.StringToData(messageAsString).AsSpan().Slice(3);
-
-    // act
-    var message = new HubPropertiesEncoder().Decode(0x00, data) as HubPropertyMessage&lt;T&gt;;
-
-    // assert
-    Assert.Equal(expectedProperty, message.Property);
-    Assert.Equal(expectedPropertyOperation, message.Operation);
-    Assert.Equal(payload, message.Payload);
-}
-</code></pre>
-<p>The <code>payload</code> parameter has a data type bound to a generic. When invoking the <code>[Theory]</code> xUnit will actually instanciate the function with the suitable type parameter. As above, sometimes the <code>[InlineData(...)]</code> entry needs to be hinted (e.g. <code>(sbyte)97</code>), when C# defaults might lead to a wrong data type (e.g. <code>97</code> is of data type <code>int</code>).</p>
-<p>When the <code>Attribute</code>s of C# do not allow to instantiate a data type (typically classes), a adapter shim might help:</p>
-<pre><code class="language-csharp">[Theory]
-[InlineData(&quot;09-00-01-03-06-00-00-00-11&quot;, HubProperty.FwVersion, HubPropertyOperation.Update, &quot;1.1.0.0&quot;)]
-[InlineData(&quot;09-00-01-04-06-00-00-00-07&quot;, HubProperty.HwVersion, HubPropertyOperation.Update, &quot;0.7.0.0&quot;)]
-[InlineData(&quot;07-00-01-0A-06-00-03&quot;, HubProperty.LegoWirelessProtocolVersion, HubPropertyOperation.Update, &quot;3.0&quot;)]
-public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messageAsString, HubProperty expectedProperty, HubPropertyOperation expectedPropertyOperation, string payload)
-    =&gt; HubPropertiesEncoder_Decode_UpdateUpstream(messageAsString, expectedProperty, expectedPropertyOperation, new Version(payload));
-</code></pre>
-<p><em><strong>Disclaimer:</strong> I google. This feature was surely somewhere mentioned before. I do not reference the material I googled, because I lost the link.</em></p>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -394,16 +476,16 @@ public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messag
 
             <h5>Tags</h5>
             <div>
-                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (3)</a>
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (4)</a>
+                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
                     <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (2)</a>
                     <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (2)</a>
-                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (1)</a>
-                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
-                    <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
-                    <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (2)</a>
+                    <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-sm"> ReactiveX (1)</a>
+                    <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-sm"> Powered UP (1)</a>
                     <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-sm"> System.Reactive (1)</a>
                     <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -414,6 +496,7 @@ public void HubPropertiesEncoder_Decode_UpdateUpstream_VersionShim(string messag
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/posts/2020/07/01/xunit-with-generic-paramter">xUnit Theories with Type Parameters</a></li>
                     <li><a href="/posts/2020/06/12/reactivex-middlewares">ReactiveX Middlewares</a></li>
                     <li><a href="/posts/2020/05/21/platformio-with-git">Using PlatformIO and Git</a></li>
                     <li><a href="/posts/2019/01/23/first-post">First Post</a></li>
