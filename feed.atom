@@ -4,7 +4,7 @@
 	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2021</rights>
-	<updated>2021-07-25T18:52:17Z</updated>
+	<updated>2021-07-25T19:00:12Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
 	<entry>
 		<id>http://tthiery.github.io/posts/2021/07/10/extension-methods</id>
@@ -336,7 +336,8 @@ await messageHandler(message); // try-catch, log and process the message.
 		<link href="http://tthiery.github.io/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos" />
 		<updated>2020-08-01T00:00:00Z</updated>
 		<content>&lt;p&gt;The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes &lt;code&gt;POS&lt;/code&gt; (reporting a position) and &lt;code&gt;APOS&lt;/code&gt; (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"&gt;&lt;code&gt;StartSpeedForDegrees&lt;/code&gt;&lt;/a&gt; and &lt;a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"&gt;&lt;code&gt;GotoAbsolutePosition&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; does not orient itself on &lt;code&gt;APOS&lt;/code&gt;. It is aligned with &lt;code&gt;POS&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Strange thing: When using &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; does not work as expected and goes to strange positions and not the expected absolute physical position!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;TL;DR&lt;/strong&gt;: &lt;code&gt;GotoAbsolutePosition&lt;/code&gt; does not orient itself on the &lt;strong&gt;physical&lt;/strong&gt; &lt;code&gt;APOS&lt;/code&gt;. It is aligned with &lt;strong&gt;virtual&lt;/strong&gt; &lt;code&gt;POS&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;And to put it in context, a memorable quote:&lt;/p&gt;
 &lt;blockquote class="blockquote"&gt;
 &lt;p&gt;There are only two hard things in Computer Science: cache invalidation and naming things.&lt;/p&gt;

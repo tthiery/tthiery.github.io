@@ -95,7 +95,8 @@ Published on Saturday, August 1, 2020<br>    </div>
                                         
 
 <p>The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes <code>POS</code> (reporting a position) and <code>APOS</code> (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"><code>StartSpeedForDegrees</code></a> and <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"><code>GotoAbsolutePosition</code></a>.</p>
-<p><strong>TL;DR</strong>: <code>GotoAbsolutePosition</code> does not orient itself on <code>APOS</code>. It is aligned with <code>POS</code>.</p>
+<p>Strange thing: When using <code>GotoAbsolutePosition</code> does not work as expected and goes to strange positions and not the expected absolute physical position!</p>
+<p><strong>TL;DR</strong>: <code>GotoAbsolutePosition</code> does not orient itself on the <strong>physical</strong> <code>APOS</code>. It is aligned with <strong>virtual</strong> <code>POS</code>.</p>
 <p>And to put it in context, a memorable quote:</p>
 <blockquote class="blockquote">
 <p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
