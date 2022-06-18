@@ -4,7 +4,7 @@
 	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
 	<rights>2022</rights>
-	<updated>2022-06-18T21:12:04Z</updated>
+	<updated>2022-06-18T21:16:05Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
 	<entry>
 		<id>http://tthiery.github.io/posts/2022/06/18/dotnet-omnisharp-roadmap</id>
@@ -57,7 +57,7 @@
 &lt;/ul&gt;
 &lt;p&gt;So in a free choice situation it boils down to these soft decision factors.&lt;/p&gt;
 &lt;p&gt;On &lt;strong&gt;platform coverage&lt;/strong&gt;: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#. .NET can freely compete with Java due to this.&lt;/p&gt;
-&lt;p&gt;👍 &lt;em&gt;The actual trigger for the announcement is further investment into that. That is good and everyone likes it.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;✅ &lt;em&gt;The actual trigger for the announcement is further investment into that. That is good and everyone likes it.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;On &lt;strong&gt;licenses&lt;/strong&gt;: For C#/F# we could always argue that there is VS Code and Omnisharp and &amp;quot;everything&amp;quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity. The same applies with Java on the Eclipse / JetBrains IntelliJ split.&lt;/p&gt;
 &lt;p&gt;✅ &lt;em&gt;And the trigger for the announcement is further investment into that. That is good and everyone likes it.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;However, there is the fundamental split between &lt;em&gt;basic productivity&lt;/em&gt; and &lt;em&gt;advanced productivity&lt;/em&gt; and our willingness to pay for it.&lt;/p&gt;
@@ -65,7 +65,7 @@
 &lt;p&gt;❌ Are we willing to pay for &lt;em&gt;basic productivity&lt;/em&gt;? Answer: No! Evidence: Adoption of Omnisharp and Creation of Visual Studio Community.&lt;/p&gt;
 &lt;p&gt;Why we do not pay for basic productivity features: because it is 2022 and there are excellent alternatives out there. Java has all the whistles and most others have at least the basic productivity features.&lt;/p&gt;
 &lt;p&gt;On &lt;strong&gt;open vs. closed&lt;/strong&gt; source: How deep can I inspect it when something misbehaves? Can I fix it? Am I dependent and locked on a single vendor (for price hickups, discontinuations, ...)? Can I archive the package for 30 years and fix it myself? Is it secure?&lt;/p&gt;
-&lt;p&gt;❌ All of these questions flip with this announcement. There is no &lt;strong&gt;trust&lt;/strong&gt; in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. &lt;strong&gt;The only trust establishing situation is real open source&lt;/strong&gt;. For &lt;em&gt;basic productivity&lt;/em&gt; the full end to end stack needs to be open source (incl. debugger and &amp;quot;LSP Tools Host&amp;quot;) as in MIT/Apache/GPL licensed or &lt;strong&gt;viable&lt;/strong&gt; alternatives needs to be present (as in Eclipse for Java). &lt;em&gt;Advanced productivity&lt;/em&gt; can be always be optional from this safeguarding perspective.&lt;/p&gt;
+&lt;p&gt;❌ All of these questions flip with this announcement. There is no &lt;strong&gt;trust&lt;/strong&gt; in big cooperations to either discontinue a product, not care about a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. &lt;strong&gt;The only trust establishing situation is real open source&lt;/strong&gt;. For &lt;em&gt;basic productivity&lt;/em&gt; the full end to end stack needs to be open source (incl. debugger and &amp;quot;LSP Tools Host&amp;quot;) as in MIT/Apache/GPL licensed or &lt;strong&gt;viable&lt;/strong&gt; alternatives needs to be present (as in Eclipse for Java). &lt;em&gt;Advanced productivity&lt;/em&gt; can be always be optional from this safeguarding perspective.&lt;/p&gt;
 &lt;h2 id="a-way-out"&gt;A way out&lt;/h2&gt;
 &lt;p&gt;This is the simple part&lt;/p&gt;
 &lt;ol&gt;
