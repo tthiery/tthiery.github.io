@@ -111,7 +111,7 @@ Published on Saturday, June 18, 2022<br>    </div>
 <li>Syntax Highlighting</li>
 <li>Meaningful errors during compilation / editing</li>
 <li>Debugging (stepping, breakpoints, ...)</li>
-<li>Correct context correct auto-completion (as in IntelliSense)</li>
+<li>Correct context specific auto-completion (as in IntelliSense)</li>
 <li>Code Navigation</li>
 <li>Refactoring / Code Fixes</li>
 </ol>
@@ -124,7 +124,7 @@ Published on Saturday, June 18, 2022<br>    </div>
 <ol start="9">
 <li>Visual Designers (remember why we bought <strong>Visual</strong> Studio in the 90s)</li>
 </ol>
-<p>Everything up to (6) is nowadays basic state of the art and comes for free (rhetorically up to here: free as in beer).</p>
+<p>Everything in basic productivity is in 2022 elementary state of the art and comes for free (rhetorically up to here: free as in beer).</p>
 <h2 id="what-makes-a-programming-language-adopted-in-a-coorperation">What makes a programming language adopted in a coorperation?</h2>
 <p>When making decisions about programming languages, we decision makers have to consider ...</p>
 <p><strong>hard factors</strong></p>
@@ -139,16 +139,16 @@ Published on Saturday, June 18, 2022<br>    </div>
 <li>The careful person asks: Is it free software? Is it Open Source Software? Can I own it? Can I rely on it?</li>
 </ul>
 <p>So in a free choice situation it boils down to these soft decision factors.</p>
-<p>On <strong>platform coverage</strong>: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#.</p>
+<p>On <strong>platform coverage</strong>: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#. .NET can freely compete with Java due to this.</p>
 <p>👍 <em>The actual trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
-<p>On <strong>licenses</strong>: For C#/F# we could always argue that there is VS Code and Omnisharp and &quot;everything&quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity.</p>
-<p>👍 <em>And the trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
+<p>On <strong>licenses</strong>: For C#/F# we could always argue that there is VS Code and Omnisharp and &quot;everything&quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity. The same applies with Java on the Eclipse / JetBrains IntelliJ split.</p>
+<p>✅ <em>And the trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
 <p>However, there is the fundamental split between <em>basic productivity</em> and <em>advanced productivity</em> and our willingness to pay for it.</p>
-<p>👍 Are we willing to pay for <em>advanced productivity</em>? Answer: Yes!</p>
-<p>👎 Are we willing to pay for <em>basic productivity</em>? Answer: No!</p>
+<p>✅ Are we willing to pay for <em>advanced productivity</em>? Answer: Yes! Evidence: Many many Visual Studio and JetBrains subscription.</p>
+<p>❌ Are we willing to pay for <em>basic productivity</em>? Answer: No! Evidence: Adoption of Omnisharp and Creation of Visual Studio Community.</p>
 <p>Why we do not pay for basic productivity features: because it is 2022 and there are excellent alternatives out there. Java has all the whistles and most others have at least the basic productivity features.</p>
 <p>On <strong>open vs. closed</strong> source: How deep can I inspect it when something misbehaves? Can I fix it? Am I dependent and locked on a single vendor (for price hickups, discontinuations, ...)? Can I archive the package for 30 years and fix it myself? Is it secure?</p>
-<p>👎 All of these questions flip with this announcement. There is no <strong>trust</strong> in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. <strong>The only trust establishing situation is real open source</strong>. For <em>basic productivity</em> the full stack needs to be open source (incl. debugger and &quot;LSP Tools Host&quot;) as in MIT/Apache/GPL licensed. <em>Advanced productivity</em> can be always be optional from this safeguarding perspective.</p>
+<p>❌ All of these questions flip with this announcement. There is no <strong>trust</strong> in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. <strong>The only trust establishing situation is real open source</strong>. For <em>basic productivity</em> the full end to end stack needs to be open source (incl. debugger and &quot;LSP Tools Host&quot;) as in MIT/Apache/GPL licensed or <strong>viable</strong> alternatives needs to be present (as in Eclipse for Java). <em>Advanced productivity</em> can be always be optional from this safeguarding perspective.</p>
 <h2 id="a-way-out">A way out</h2>
 <p>This is the simple part</p>
 <ol>
@@ -156,7 +156,7 @@ Published on Saturday, June 18, 2022<br>    </div>
 <li>Make both of them pluggable with Microsoft commercial plugins for the <em>advanced productivity</em>. I know, especially for the debugger, that this is an hard thing.</li>
 <li>Sell us a &quot;C# (Commercial)&quot; with <em>advanced productivity</em> edition next a fully free &quot;C# (Community)&quot; with <em>basic productivity</em> edition (free as in beer AND in license).</li>
 </ol>
-<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else.</p>
+<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else. Not on the short term and not on the long term when trust is established.</p>
 <p>Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.</p>
 <h2 id="appendix-a-an-architecture-side-note">Appendix A: An architecture side note</h2>
 <ul>
@@ -167,7 +167,7 @@ Published on Saturday, June 18, 2022<br>    </div>
 <h2 id="appendix-e-an-ethical-side-note">Appendix E: An ethical side note</h2>
 <ul>
 <li>There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).</li>
-<li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft cannot tell us their roadmap and real intention.</li>
+<li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging (remember: we deal with a CPU who is not ambivalent in its outcome: it is either true or false) where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft management is not willing to tell us their roadmap and real intention.</li>
 </ul>
 
 
