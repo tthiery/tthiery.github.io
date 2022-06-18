@@ -3,9 +3,92 @@
 	<id>http://tthiery.github.io/</id>
 	<title>Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
-	<rights>2021</rights>
-	<updated>2021-07-25T19:00:12Z</updated>
+	<rights>2022</rights>
+	<updated>2022-06-18T20:53:49Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2022/06/18/dotnet-omnisharp-roadmap</id>
+		<title>How the Omnisharp roadmap affects .NET in Cooperations</title>
+		<link href="http://tthiery.github.io/posts/2022/06/18/dotnet-omnisharp-roadmap" />
+		<updated>2022-06-18T00:00:00Z</updated>
+		<content>&lt;p&gt;The &lt;a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276"&gt;announcement&lt;/a&gt; to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.&lt;/p&gt;
+&lt;p&gt;I am a .NET fanboy but I have a perspective on the broader spectrum of programming languages. I am an architect, decision maker/influencer and regularly involved in questions on whether Visual Studio Subscriptions are needed. I am not in a Microsoft shop, I am not in the silicon valley and I am in a conservative polyglot business.&lt;/p&gt;
+&lt;h2 id="what-defines-a-state-of-the-art-programming-language"&gt;What defines a state of the art programming language&lt;/h2&gt;
+&lt;p&gt;In the past, programming languages consisted of a runtime, compiler and debugger. Microsoft's own Anders Hejlsberg (of Pascal, C#, TypeScript) explained in an awesome video named &amp;quot;&lt;a href="https://docs.microsoft.com/en-us/shows/seth-juarez/anders-hejlsberg-on-modern-compiler-construction"&gt;Modern Compiler Construction&lt;/a&gt;&amp;quot; how previously considered IDE features like code completion, syntax highlighting, code analysis or code refactoring are now part of the compiler. C# (Roslyn) and especially TypeScript have been (modern day) forerunners of this. This combined with the general industry adoption of the &lt;a href="https://github.com/microsoft/language-server-protocol"&gt;language server protocol&lt;/a&gt; developed by the VS Code (Monaco?) team basically defines what a modern programming language is:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A modern, modular, non-black-box compiler&lt;/li&gt;
+&lt;li&gt;A debugger&lt;/li&gt;
+&lt;li&gt;A rich out-of-the-box library&lt;/li&gt;
+&lt;li&gt;A LSP server written in the same programming language&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;.NET is awesome in all of them: The compiler is awesome, the debugger is awesome, the base class library is awesome and the LSP server ... well ... is there. But make no mistake: The other languages have this whole portfolio as well or are on the way there (Java, JavaScript/TS, Python, Go, Rust, PHP, ...).&lt;/p&gt;
+&lt;p&gt;The core attribute of most application programming languages is &lt;strong&gt;developer productivity&lt;/strong&gt;. But that is a full spectrum reaching from simple auto-completion to AI-guided auto-coding. For me the hierarchy is the following&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Basic Productivity&lt;/strong&gt;&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Syntax Highlighting&lt;/li&gt;
+&lt;li&gt;Meaningful errors during compilation / editing&lt;/li&gt;
+&lt;li&gt;Debugging (stepping, breakpoints, ...)&lt;/li&gt;
+&lt;li&gt;Correct context correct auto-completion (as in IntelliSense)&lt;/li&gt;
+&lt;li&gt;Code Navigation&lt;/li&gt;
+&lt;li&gt;Refactoring / Code Fixes&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Advanced Productivity&lt;/strong&gt;&lt;/p&gt;
+&lt;ol start="7"&gt;
+&lt;li&gt;Advanced Debugging (as in IntelliTrace, break and edit, hot reload, ...)&lt;/li&gt;
+&lt;li&gt;AI / statistical guidance (as in GitHub CoPilot, IntelliCode, ...)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;strong&gt;Super Advanced Productivity&lt;/strong&gt;&lt;/p&gt;
+&lt;ol start="9"&gt;
+&lt;li&gt;Visual Designers (remember why we bought &lt;strong&gt;Visual&lt;/strong&gt; Studio in the 90s)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Everything up to (6) is nowadays basic state of the art and comes for free (rhetorically up to here: free as in beer).&lt;/p&gt;
+&lt;h2 id="what-makes-a-programming-language-adopted-in-a-coorperation"&gt;What makes a programming language adopted in a coorperation?&lt;/h2&gt;
+&lt;p&gt;When making decisions about programming languages, we decision makers have to consider ...&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;hard factors&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The Architect asks: Does the programming language fullfill the needs?&lt;/li&gt;
+&lt;li&gt;The R&amp;amp;D lead asks: Can I hire easily for this programming language? Does my team know this language?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;soft factors&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The Apple, Linux, Web, or Windows fanboy / IT admin asks: Does it run on my platform?&lt;/li&gt;
+&lt;li&gt;The R&amp;amp;D lead asks: Do I need licenses for it?&lt;/li&gt;
+&lt;li&gt;The careful person asks: Is it free software? Is it Open Source Software? Can I own it? Can I rely on it?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;So in a free choice situation it boils down to these soft decision factors.&lt;/p&gt;
+&lt;p&gt;On &lt;strong&gt;platform coverage&lt;/strong&gt;: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#.&lt;/p&gt;
+&lt;p&gt;👍 &lt;em&gt;The actual trigger for the announcement is further investment into that. That is good and everyone likes it.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;On &lt;strong&gt;licenses&lt;/strong&gt;: For C#/F# we could always argue that there is VS Code and Omnisharp and &amp;quot;everything&amp;quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity.&lt;/p&gt;
+&lt;p&gt;👍 &lt;em&gt;And the trigger for the announcement is further investment into that. That is good and everyone likes it.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;However, there is the fundamental split between &lt;em&gt;basic productivity&lt;/em&gt; and &lt;em&gt;advanced productivity&lt;/em&gt; and our willingness to pay for it.&lt;/p&gt;
+&lt;p&gt;👍 Are we willing to pay for &lt;em&gt;advanced productivity&lt;/em&gt;? Answer: Yes!&lt;/p&gt;
+&lt;p&gt;👎 Are we willing to pay for &lt;em&gt;basic productivity&lt;/em&gt;? Answer: No!&lt;/p&gt;
+&lt;p&gt;Why we do not pay for basic productivity features: because it is 2022 and there are excellent alternatives out there. Java has all the whistles and most others have at least the basic productivity features.&lt;/p&gt;
+&lt;p&gt;On &lt;strong&gt;open vs. closed&lt;/strong&gt; source: How deep can I inspect it when something misbehaves? Can I fix it? Am I dependent and locked on a single vendor (for price hickups, discontinuations, ...)? Can I archive the package for 30 years and fix it myself? Is it secure?&lt;/p&gt;
+&lt;p&gt;👎 All of these questions flip with this announcement. There is no &lt;strong&gt;trust&lt;/strong&gt; in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. &lt;strong&gt;The only trust establishing situation is real open source&lt;/strong&gt;. For &lt;em&gt;basic productivity&lt;/em&gt; the full stack needs to be open source (incl. debugger and &amp;quot;LSP Tools Host&amp;quot;) as in MIT/Apache/GPL licensed. &lt;em&gt;Advanced productivity&lt;/em&gt; can be always be optional from this safeguarding perspective.&lt;/p&gt;
+&lt;h2 id="a-way-out"&gt;A way out&lt;/h2&gt;
+&lt;p&gt;This is the simple part&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Make the &amp;quot;LSP Tools Host&amp;quot; and the .NET debugger open source (license wise).&lt;/li&gt;
+&lt;li&gt;Make both of them pluggable with Microsoft commercial plugins for the &lt;em&gt;advanced productivity&lt;/em&gt;. I know, especially for the debugger, that this is an hard thing.&lt;/li&gt;
+&lt;li&gt;Sell us a &amp;quot;C# (Commercial)&amp;quot; with &lt;em&gt;advanced productivity&lt;/em&gt; edition next a fully free &amp;quot;C# (Community)&amp;quot; with &lt;em&gt;basic productivity&lt;/em&gt; edition (free as in beer AND in license).&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else.&lt;/p&gt;
+&lt;p&gt;Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.&lt;/p&gt;
+&lt;h2 id="appendix-a-an-architecture-side-note"&gt;Appendix A: An architecture side note&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;There is an awesome LSP protocol client/server library as part of the OmniSharp library. No matter what, do not close source this even if it is extended by proprietary Microsoft extensions. It is a human readable protocol. The .NET community builds language servers beyond just the languages C#/F#.&lt;/li&gt;
+&lt;li&gt;Do not break the Roslyn project and the public availability of code analyzers/fixes (and other aspects of the &amp;quot;Modern Compiler Construction&amp;quot;). It is a modern compiler and not only an AST exporter.&lt;/li&gt;
+&lt;li&gt;I assume the &amp;quot;LSP Tool Host&amp;quot; is nothing else than interacting with and editor based on text via LSP/DSP and then forwarding the events into the commercial and non-commercial plugins. Why is a stable, reliable, easy, multi-provider language/debugging server such a secret. Especially when the DSP and LSP are such a thin wrapper around human-eye visible, standardized text editor features.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="appendix-e-an-ethical-side-note"&gt;Appendix E: An ethical side note&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).&lt;/li&gt;
+&lt;li&gt;We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &amp;quot;LSP Tools Host&amp;quot;) just because Microsoft cannot tell us their roadmap and real intention.&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+		<summary>&lt;p&gt;The &lt;a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276"&gt;announcement&lt;/a&gt; to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2021/07/10/extension-methods</id>
 		<title>Extension Methods</title>

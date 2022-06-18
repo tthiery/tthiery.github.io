@@ -89,6 +89,88 @@
 <div class="row">
     <div class="col-sm-8 right-border">
                 <div class="post-preview">
+                    <a href="/posts/2022/06/18/dotnet-omnisharp-roadmap">
+                        <h2 class="post-title">How the Omnisharp roadmap affects .NET in Cooperations</h2>
+                    </a>
+                    <p class="post-meta">Posted on Saturday, June 18, 2022</p>
+<p>The <a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276">announcement</a> to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.</p>
+<p>I am a .NET fanboy but I have a perspective on the broader spectrum of programming languages. I am an architect, decision maker/influencer and regularly involved in questions on whether Visual Studio Subscriptions are needed. I am not in a Microsoft shop, I am not in the silicon valley and I am in a conservative polyglot business.</p>
+<h2 id="what-defines-a-state-of-the-art-programming-language">What defines a state of the art programming language</h2>
+<p>In the past, programming languages consisted of a runtime, compiler and debugger. Microsoft's own Anders Hejlsberg (of Pascal, C#, TypeScript) explained in an awesome video named &quot;<a href="https://docs.microsoft.com/en-us/shows/seth-juarez/anders-hejlsberg-on-modern-compiler-construction">Modern Compiler Construction</a>&quot; how previously considered IDE features like code completion, syntax highlighting, code analysis or code refactoring are now part of the compiler. C# (Roslyn) and especially TypeScript have been (modern day) forerunners of this. This combined with the general industry adoption of the <a href="https://github.com/microsoft/language-server-protocol">language server protocol</a> developed by the VS Code (Monaco?) team basically defines what a modern programming language is:</p>
+<ul>
+<li>A modern, modular, non-black-box compiler</li>
+<li>A debugger</li>
+<li>A rich out-of-the-box library</li>
+<li>A LSP server written in the same programming language</li>
+</ul>
+<p>.NET is awesome in all of them: The compiler is awesome, the debugger is awesome, the base class library is awesome and the LSP server ... well ... is there. But make no mistake: The other languages have this whole portfolio as well or are on the way there (Java, JavaScript/TS, Python, Go, Rust, PHP, ...).</p>
+<p>The core attribute of most application programming languages is <strong>developer productivity</strong>. But that is a full spectrum reaching from simple auto-completion to AI-guided auto-coding. For me the hierarchy is the following</p>
+<p><strong>Basic Productivity</strong></p>
+<ol>
+<li>Syntax Highlighting</li>
+<li>Meaningful errors during compilation / editing</li>
+<li>Debugging (stepping, breakpoints, ...)</li>
+<li>Correct context correct auto-completion (as in IntelliSense)</li>
+<li>Code Navigation</li>
+<li>Refactoring / Code Fixes</li>
+</ol>
+<p><strong>Advanced Productivity</strong></p>
+<ol start="7">
+<li>Advanced Debugging (as in IntelliTrace, break and edit, hot reload, ...)</li>
+<li>AI / statistical guidance (as in GitHub CoPilot, IntelliCode, ...)</li>
+</ol>
+<p><strong>Super Advanced Productivity</strong></p>
+<ol start="9">
+<li>Visual Designers (remember why we bought <strong>Visual</strong> Studio in the 90s)</li>
+</ol>
+<p>Everything up to (6) is nowadays basic state of the art and comes for free (rhetorically up to here: free as in beer).</p>
+<h2 id="what-makes-a-programming-language-adopted-in-a-coorperation">What makes a programming language adopted in a coorperation?</h2>
+<p>When making decisions about programming languages, we decision makers have to consider ...</p>
+<p><strong>hard factors</strong></p>
+<ul>
+<li>The Architect asks: Does the programming language fullfill the needs?</li>
+<li>The R&amp;D lead asks: Can I hire easily for this programming language? Does my team know this language?</li>
+</ul>
+<p><strong>soft factors</strong></p>
+<ul>
+<li>The Apple, Linux, Web, or Windows fanboy / IT admin asks: Does it run on my platform?</li>
+<li>The R&amp;D lead asks: Do I need licenses for it?</li>
+<li>The careful person asks: Is it free software? Is it Open Source Software? Can I own it? Can I rely on it?</li>
+</ul>
+<p>So in a free choice situation it boils down to these soft decision factors.</p>
+<p>On <strong>platform coverage</strong>: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#.</p>
+<p>👍 <em>The actual trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
+<p>On <strong>licenses</strong>: For C#/F# we could always argue that there is VS Code and Omnisharp and &quot;everything&quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity.</p>
+<p>👍 <em>And the trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
+<p>However, there is the fundamental split between <em>basic productivity</em> and <em>advanced productivity</em> and our willingness to pay for it.</p>
+<p>👍 Are we willing to pay for <em>advanced productivity</em>? Answer: Yes!</p>
+<p>👎 Are we willing to pay for <em>basic productivity</em>? Answer: No!</p>
+<p>Why we do not pay for basic productivity features: because it is 2022 and there are excellent alternatives out there. Java has all the whistles and most others have at least the basic productivity features.</p>
+<p>On <strong>open vs. closed</strong> source: How deep can I inspect it when something misbehaves? Can I fix it? Am I dependent and locked on a single vendor (for price hickups, discontinuations, ...)? Can I archive the package for 30 years and fix it myself? Is it secure?</p>
+<p>👎 All of these questions flip with this announcement. There is no <strong>trust</strong> in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. <strong>The only trust establishing situation is real open source</strong>. For <em>basic productivity</em> the full stack needs to be open source (incl. debugger and &quot;LSP Tools Host&quot;) as in MIT/Apache/GPL licensed. <em>Advanced productivity</em> can be always be optional from this safeguarding perspective.</p>
+<h2 id="a-way-out">A way out</h2>
+<p>This is the simple part</p>
+<ol>
+<li>Make the &quot;LSP Tools Host&quot; and the .NET debugger open source (license wise).</li>
+<li>Make both of them pluggable with Microsoft commercial plugins for the <em>advanced productivity</em>. I know, especially for the debugger, that this is an hard thing.</li>
+<li>Sell us a &quot;C# (Commercial)&quot; with <em>advanced productivity</em> edition next a fully free &quot;C# (Community)&quot; with <em>basic productivity</em> edition (free as in beer AND in license).</li>
+</ol>
+<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else.</p>
+<p>Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.</p>
+<h2 id="appendix-a-an-architecture-side-note">Appendix A: An architecture side note</h2>
+<ul>
+<li>There is an awesome LSP protocol client/server library as part of the OmniSharp library. No matter what, do not close source this even if it is extended by proprietary Microsoft extensions. It is a human readable protocol. The .NET community builds language servers beyond just the languages C#/F#.</li>
+<li>Do not break the Roslyn project and the public availability of code analyzers/fixes (and other aspects of the &quot;Modern Compiler Construction&quot;). It is a modern compiler and not only an AST exporter.</li>
+<li>I assume the &quot;LSP Tool Host&quot; is nothing else than interacting with and editor based on text via LSP/DSP and then forwarding the events into the commercial and non-commercial plugins. Why is a stable, reliable, easy, multi-provider language/debugging server such a secret. Especially when the DSP and LSP are such a thin wrapper around human-eye visible, standardized text editor features.</li>
+</ul>
+<h2 id="appendix-e-an-ethical-side-note">Appendix E: An ethical side note</h2>
+<ul>
+<li>There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).</li>
+<li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft cannot tell us their roadmap and real intention.</li>
+</ul>
+                </div>       
+                    <hr /> 
+                <div class="post-preview">
                     <a href="/posts/2021/07/10/extension-methods">
                         <h2 class="post-title">Extension Methods</h2>
                     </a>
@@ -409,62 +491,6 @@ await messageHandler(message); // try-catch, log and process the message.
 <p>This article hopefully gave an introduction into how the <a href="https://github.com/violetgrass/middleware">violetgrass/middleware</a> and ASP.NET Core middleware stack work. While sometimes it looks over-engineered, it is actually quite simple and a powerful extensibility framework.</p>
 <p>There is more to typically middleware scenarios like dispatching and endpoint routing, however, this is material for other articles.</p>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos">
-                        <h2 class="post-title">LEGO Powered UP - Motor Modes POS and APOS</h2>
-                    </a>
-                    <p class="post-meta">Posted on Saturday, August 1, 2020</p>
-<p>The LEGO Control+ motors - Technic XLarge Linear Motor and Technic Large Linear Motor - have internally the modes <code>POS</code> (reporting a position) and <code>APOS</code> (reporting an absolute position). Further does the LEGO Wireless Protocol specify methods <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"><code>StartSpeedForDegrees</code></a> and <a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"><code>GotoAbsolutePosition</code></a>.</p>
-<p>Strange thing: When using <code>GotoAbsolutePosition</code> does not work as expected and goes to strange positions and not the expected absolute physical position!</p>
-<p><strong>TL;DR</strong>: <code>GotoAbsolutePosition</code> does not orient itself on the <strong>physical</strong> <code>APOS</code>. It is aligned with <strong>virtual</strong> <code>POS</code>.</p>
-<p>And to put it in context, a memorable quote:</p>
-<blockquote class="blockquote">
-<p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
-<p>-- Phil Karlton</p>
-</blockquote>
-<h3 id="the-modes">The Modes</h3>
-<p>Let us start with the simple mode: <code>APOS</code> is the absolute position in degrees measured from a zero point. It goes from 0, 1 .. 179, 180 then to -180, -179, .., -1, 0. Simple, straight forward. For the current Control+ motors the zero point is physically not marked.</p>
-<p><code>POS</code> on the other hand is more complicated. The value 0 is aligned with the position of the motor was when the device was activated (most likely: put under power). From that moment on, it counts the degrees moved away from that position. And that number can get quite high (it is a <code>Int32</code>) and exceeds the traditional 0-360 degree range.</p>
-<p>An example</p>
-<ol>
-<li>Motor is put under power: <code>POS: 0</code></li>
-<li>Motor is moved by 30 degrees: <code>POS: 30</code></li>
-<li>Motor is moved by -70 degrees: <code>POS: -40</code></li>
-<li>Motor is further moved by two full turns (aka. -720 degrees) : <code>POS: -760</code></li>
-</ol>
-<h3 id="output-commands">Output Commands</h3>
-<p><a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-startspeedfordegrees-degrees-speed-maxpower-endstate-useprofile-0x0b"><code>StartSpeedForDegrees</code></a> moves the motor by the amount of degrees <strong>relative</strong> to the current position. If the motor is at <code>POS: 20</code> and the command is invoked with 5 degrees the motor is afterwards in <code>POS: 25</code>.</p>
-<p><a href="https://lego.github.io/lego-ble-wireless-protocol-docs/index.html#output-sub-command-gotoabsoluteposition-abspos-speed-maxpower-endstate-useprofile-0x0d"><code>GotoAbsolutePosition</code></a> moves the motor to a given <strong>absolute</strong> position <strong>within the range of <code>POS</code></strong>. An example: If the position is <code>POS: -760</code> and command is invoked with -40 the motor will make <em><strong>two full turns</strong></em> and is <em><strong>not oriented</strong></em> 40 degrees of the physical zero but -40 degrees of the initial position of the motor. Consequently it takes an <code>Int32</code> as a parameter.</p>
-<p>These <strong>two unexpected behaviors</strong> are traps when programming against the LEGO Wireless Protocol / Powered UP. They are a horrible user experience in regards to their naming (developer perspective). <strong>However, they are the correct interface and the right thing to do</strong>.</p>
-<p><em><strong>Note</strong>: This reflection is based on the Technic Control+ L/XL Linear Motors. There might be a different handling with different motors. I will update the post if I become aware of a difference.</em></p>
-<h3 id="adjust-the-mental-model">Adjust the mental model</h3>
-<ol>
-<li>For most use cases, an (physical) absolute position (<code>APOS</code>) is useless. A Technic axle can be connected in 3 wrong offsets compared to the pyhsical zero point of the motor (remember: unmarked). Even more interesting for gears.</li>
-<li><code>GotoAbsolutePosition</code> should be (mentally and in SDKs) named <code>GotoPosition</code> to better reflect the fact that it is aligned with the <code>POS</code> range and not the <code>APOS</code> range.
-<ul>
-<li>The two full turns can then easily be explained as the amount of degrees as a delta between the current pos and the targeted position the motor should go-to.</li>
-<li>The 40 degrees of the original motor position are also now okay, because that aligns with the understanding of <code>POS</code>.</li>
-</ul>
-</li>
-</ol>
-<p><em><strong>Note</strong>: As an alternative: Maybe <code>APOS</code> is wrongly named 😀. Or maybe we just need a proper documentation.</em></p>
-<h3 id="practical-usage-reset-zero">Practical Usage: Reset Zero</h3>
-<p>Assume a Technic Model with a steering. Magically it was calibrated to the center of your steer. The motor is at <code>POS: 254</code>.</p>
-<p>The question here is: What use does <code>GotoAbsolutePosition</code> bring? Well, there is the method <code>PresetEncoder</code>. It resets <code>POS</code> to zero. Applied here, <code>GotoAbsolutePosition</code> can now comfortable control the steering around the middle position (0) without doing complicated math otherwise needed when using <code>StartSpeedForDegrees</code>.</p>
-<h3 id="conclusions">Conclusions</h3>
-<p>Naming is hard. Documentation is sometimes a good idea.</p>
-<h3 id="appendix-users-of-sharpbrick.poweredup">Appendix: Users of SharpBrick.PoweredUp</h3>
-<p>The mentioned modes and commands are exposed using the following methods:</p>
-<ul>
-<li><code>POS</code> =&gt; <code>TachoMotor.PositionObservable</code></li>
-<li><code>APOS</code> =&gt; <code>AbsoluteMotor.AbsolutePositionObservable</code></li>
-<li><code>StartSpeedForDegrees</code> =&gt; <code>TachoMotor.StartSpeedForDegreesAsync</code></li>
-<li><code>GotoAbsolutePosition</code> =&gt; <code>AbsoluteMotor.GotoAbsolutePositionAsync</code>.</li>
-<li><code>PresetEncoder</code> =&gt; <code>TachoMotor.SetZeroAsync</code>.</li>
-</ul>
-<p>There might be a change coming which <a href="https://github.com/sharpbrick/powered-up/issues/74">renames</a> and <a href="https://github.com/sharpbrick/powered-up/issues/75">moves</a> <code>GotoAbsolutePosition</code>.</p>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -477,16 +503,16 @@ await messageHandler(message); // try-catch, log and process the message.
 
             <h5>Tags</h5>
             <div>
-                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (4)</a>
-                    <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (2)</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (2)</a>
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (5)</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (3)</a>
                     <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
                     <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (2)</a>
-                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (2)</a>
                     <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
                     <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
                     <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
                     <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-sm"> System.Reactive (1)</a>
+                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -497,10 +523,10 @@ await messageHandler(message); // try-catch, log and process the message.
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos">LEGO Powered UP - Motor Modes POS and APOS</a></li>
                     <li><a href="/posts/2020/07/01/xunit-with-generic-paramter">xUnit Theories with Type Parameters</a></li>
                     <li><a href="/posts/2020/06/12/reactivex-middlewares">ReactiveX Middlewares</a></li>
                     <li><a href="/posts/2020/05/21/platformio-with-git">Using PlatformIO and Git</a></li>
-                    <li><a href="/posts/2019/01/23/first-post">First Post</a></li>
             </ul>
                 <ul class="pager">
                     <li class="next">
@@ -524,7 +550,7 @@ await messageHandler(message); // try-catch, log and process the message.
         <div class="row">
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted">
-                        Copyright © 2021
+                        Copyright © 2022
                         <br />
                             <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
                         |

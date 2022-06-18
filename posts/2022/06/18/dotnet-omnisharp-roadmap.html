@@ -1,0 +1,243 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+        <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+
+        <title>Journal - How the Omnisharp roadmap affects .NET in Cooperations</title>
+        <meta name="description" content="Welcome Builders!" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">        
+
+        <link type="application/rss+xml" rel="alternate" title="Journal" href="/feed.rss" />
+                <link type="application/atom+xml" rel="alternate" title="Journal" href="/feed.atom" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+        <link href="/assets/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="/assets/css/highlight.css" rel="stylesheet">
+        <link href="/assets/css/clean-blog.css" rel="stylesheet" />
+        <link href="/assets/css/master.css" rel="stylesheet" />
+        <link href="/assets/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+        <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+        <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+        <link href="/assets/css/override.css" rel="stylesheet" />
+
+
+        <meta name="application-name" content="Journal" />
+        <meta name="msapplication-tooltip" content="Journal" />
+        <meta name="msapplication-starturl" content="/" />
+
+        <meta property="og:title" content="Journal - How the Omnisharp roadmap affects .NET in Cooperations" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://tthiery.github.io/posts/2022/06/18/dotnet-omnisharp-roadmap" />
+        <!-- TODO: More social graph meta tags -->
+
+        
+
+
+        </head>
+        <body>
+                
+                <!-- Navigation -->
+                <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+                        <div class="container-fluid">
+                                <!-- Brand and toggle get grouped for better mobile display -->
+                                <div class="navbar-header page-scroll">
+                                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse">
+                                        <span class="sr-only">Toggle navigation</span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        <span class="icon-bar"></span>
+                                        </button>
+                                        <a class="navbar-brand" href="/">Journal</a>
+                                </div>
+                        
+                                <!-- Collect the nav links, forms, and other content for toggling -->
+                                <div class="collapse navbar-collapse" id="navbar-collapse">
+                                        <ul class="nav navbar-nav navbar-right">
+                                                        <li><a href="/posts">Archive</a></li>
+        <li><a href="/tags">Tags</a></li>
+        <li><a href="/about">About Me</a></li>
+ 
+                                        </ul>
+                                </div>
+                                <!-- /.navbar-collapse -->
+                        </div>
+                        <!-- /.container -->
+                </nav>
+                
+                <!-- Page Header -->
+                <header class="intro-header" id="intro-header">
+                        <div class="container">
+                                <div class="row">
+                                        <div class="col-md-12">
+
+    
+<div class="post-heading">
+    <h1>How the Omnisharp roadmap affects .NET in Cooperations</h1>
+    <div class="meta">        
+Published on Saturday, June 18, 2022<br>    </div>
+        <div class="tags">
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming</a>
+        </div>     
+</div>
+                                        </div>
+                                </div>
+                        </div>
+                </header>
+                
+                <!-- Main Content -->
+                <div class="container">
+                        <div class="row">
+                                <div id="content" class="col-md-12">
+                                        
+
+<p>The <a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276">announcement</a> to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.</p>
+<p>I am a .NET fanboy but I have a perspective on the broader spectrum of programming languages. I am an architect, decision maker/influencer and regularly involved in questions on whether Visual Studio Subscriptions are needed. I am not in a Microsoft shop, I am not in the silicon valley and I am in a conservative polyglot business.</p>
+<h2 id="what-defines-a-state-of-the-art-programming-language">What defines a state of the art programming language</h2>
+<p>In the past, programming languages consisted of a runtime, compiler and debugger. Microsoft's own Anders Hejlsberg (of Pascal, C#, TypeScript) explained in an awesome video named &quot;<a href="https://docs.microsoft.com/en-us/shows/seth-juarez/anders-hejlsberg-on-modern-compiler-construction">Modern Compiler Construction</a>&quot; how previously considered IDE features like code completion, syntax highlighting, code analysis or code refactoring are now part of the compiler. C# (Roslyn) and especially TypeScript have been (modern day) forerunners of this. This combined with the general industry adoption of the <a href="https://github.com/microsoft/language-server-protocol">language server protocol</a> developed by the VS Code (Monaco?) team basically defines what a modern programming language is:</p>
+<ul>
+<li>A modern, modular, non-black-box compiler</li>
+<li>A debugger</li>
+<li>A rich out-of-the-box library</li>
+<li>A LSP server written in the same programming language</li>
+</ul>
+<p>.NET is awesome in all of them: The compiler is awesome, the debugger is awesome, the base class library is awesome and the LSP server ... well ... is there. But make no mistake: The other languages have this whole portfolio as well or are on the way there (Java, JavaScript/TS, Python, Go, Rust, PHP, ...).</p>
+<p>The core attribute of most application programming languages is <strong>developer productivity</strong>. But that is a full spectrum reaching from simple auto-completion to AI-guided auto-coding. For me the hierarchy is the following</p>
+<p><strong>Basic Productivity</strong></p>
+<ol>
+<li>Syntax Highlighting</li>
+<li>Meaningful errors during compilation / editing</li>
+<li>Debugging (stepping, breakpoints, ...)</li>
+<li>Correct context correct auto-completion (as in IntelliSense)</li>
+<li>Code Navigation</li>
+<li>Refactoring / Code Fixes</li>
+</ol>
+<p><strong>Advanced Productivity</strong></p>
+<ol start="7">
+<li>Advanced Debugging (as in IntelliTrace, break and edit, hot reload, ...)</li>
+<li>AI / statistical guidance (as in GitHub CoPilot, IntelliCode, ...)</li>
+</ol>
+<p><strong>Super Advanced Productivity</strong></p>
+<ol start="9">
+<li>Visual Designers (remember why we bought <strong>Visual</strong> Studio in the 90s)</li>
+</ol>
+<p>Everything up to (6) is nowadays basic state of the art and comes for free (rhetorically up to here: free as in beer).</p>
+<h2 id="what-makes-a-programming-language-adopted-in-a-coorperation">What makes a programming language adopted in a coorperation?</h2>
+<p>When making decisions about programming languages, we decision makers have to consider ...</p>
+<p><strong>hard factors</strong></p>
+<ul>
+<li>The Architect asks: Does the programming language fullfill the needs?</li>
+<li>The R&amp;D lead asks: Can I hire easily for this programming language? Does my team know this language?</li>
+</ul>
+<p><strong>soft factors</strong></p>
+<ul>
+<li>The Apple, Linux, Web, or Windows fanboy / IT admin asks: Does it run on my platform?</li>
+<li>The R&amp;D lead asks: Do I need licenses for it?</li>
+<li>The careful person asks: Is it free software? Is it Open Source Software? Can I own it? Can I rely on it?</li>
+</ul>
+<p>So in a free choice situation it boils down to these soft decision factors.</p>
+<p>On <strong>platform coverage</strong>: The gigantic success of VS Code and .NET Core have opened up the platform coverage topic for C#/F#.</p>
+<p>👍 <em>The actual trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
+<p>On <strong>licenses</strong>: For C#/F# we could always argue that there is VS Code and Omnisharp and &quot;everything&quot; is MIT licensed. We decision maker buy anyway the Visual Studio licenses because of increased productivity.</p>
+<p>👍 <em>And the trigger for the announcement is further investment into that. That is good and everyone likes it.</em></p>
+<p>However, there is the fundamental split between <em>basic productivity</em> and <em>advanced productivity</em> and our willingness to pay for it.</p>
+<p>👍 Are we willing to pay for <em>advanced productivity</em>? Answer: Yes!</p>
+<p>👎 Are we willing to pay for <em>basic productivity</em>? Answer: No!</p>
+<p>Why we do not pay for basic productivity features: because it is 2022 and there are excellent alternatives out there. Java has all the whistles and most others have at least the basic productivity features.</p>
+<p>On <strong>open vs. closed</strong> source: How deep can I inspect it when something misbehaves? Can I fix it? Am I dependent and locked on a single vendor (for price hickups, discontinuations, ...)? Can I archive the package for 30 years and fix it myself? Is it secure?</p>
+<p>👎 All of these questions flip with this announcement. There is no <strong>trust</strong> in big cooperations to either discontinue a product or extort money from us developers. We developer got burned by Apple, Google and Microsoft on every opportunity when it comes to this. <strong>The only trust establishing situation is real open source</strong>. For <em>basic productivity</em> the full stack needs to be open source (incl. debugger and &quot;LSP Tools Host&quot;) as in MIT/Apache/GPL licensed. <em>Advanced productivity</em> can be always be optional from this safeguarding perspective.</p>
+<h2 id="a-way-out">A way out</h2>
+<p>This is the simple part</p>
+<ol>
+<li>Make the &quot;LSP Tools Host&quot; and the .NET debugger open source (license wise).</li>
+<li>Make both of them pluggable with Microsoft commercial plugins for the <em>advanced productivity</em>. I know, especially for the debugger, that this is an hard thing.</li>
+<li>Sell us a &quot;C# (Commercial)&quot; with <em>advanced productivity</em> edition next a fully free &quot;C# (Community)&quot; with <em>basic productivity</em> edition (free as in beer AND in license).</li>
+</ol>
+<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else.</p>
+<p>Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.</p>
+<h2 id="appendix-a-an-architecture-side-note">Appendix A: An architecture side note</h2>
+<ul>
+<li>There is an awesome LSP protocol client/server library as part of the OmniSharp library. No matter what, do not close source this even if it is extended by proprietary Microsoft extensions. It is a human readable protocol. The .NET community builds language servers beyond just the languages C#/F#.</li>
+<li>Do not break the Roslyn project and the public availability of code analyzers/fixes (and other aspects of the &quot;Modern Compiler Construction&quot;). It is a modern compiler and not only an AST exporter.</li>
+<li>I assume the &quot;LSP Tool Host&quot; is nothing else than interacting with and editor based on text via LSP/DSP and then forwarding the events into the commercial and non-commercial plugins. Why is a stable, reliable, easy, multi-provider language/debugging server such a secret. Especially when the DSP and LSP are such a thin wrapper around human-eye visible, standardized text editor features.</li>
+</ul>
+<h2 id="appendix-e-an-ethical-side-note">Appendix E: An ethical side note</h2>
+<ul>
+<li>There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).</li>
+<li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft cannot tell us their roadmap and real intention.</li>
+</ul>
+
+
+
+                                </div>
+                        </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Footer -->
+                <footer>
+                        <div class="container">
+        <div class="row">
+                <div class="col-md-12 text-center">
+                    <p class="copyright text-muted">
+                        Copyright © 2022
+                        <br />
+                            <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
+                        |
+                            <a href="/feed.atom"><i class="fa fa-rss"></i> Atom Feed</a>
+                        <br />
+                        <strong><a href="https://wyam.io">Generated by Wyam</a></strong>
+                    </p>
+                </div>
+        </div>
+</div>
+
+                </footer> 
+
+                <script src="/assets/js/jquery.min.js"></script>
+                <script src="/assets/js/bootstrap.min.js"></script>     
+                <script src="/assets/js/highlight.pack.js"></script>   
+                <script src="/assets/js/clean-blog.js"></script>
+                <script src="/assets/js/d3.v3.min.js"></script>
+                <script src="/assets/js/trianglify.min.js"></script>
+                <script src="/assets/js/Please-compressed.js"></script>
+                <script src="/assets/js/background-check.min.js"></script>
+
+                <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+                <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+                <!--[if lt IE 9]>
+                        <script src="/assets/js/html5shiv.js"></script>
+                        <script src="/assets/js/respond.min.js"></script>
+                <![endif]-->
+                
+                
+                <script>hljs.initHighlightingOnLoad();</script>
+
+                        <script type="text/javascript">                
+                                // Header background                        
+                                var colors = Please.make_color({
+                                        colors_returned: 3,
+                                        saturation: .6
+                                });
+                                var t = new Trianglify({
+                                        x_gradient: colors,
+                                        y_gradient: ["#FFFFFF"]
+                                });
+                                var header = document.getElementById("intro-header");
+                                var pattern = t.generate(header.clientWidth, header.clientHeight);
+                                header.setAttribute('style', 'background-image: ' + pattern.dataUrl);                        
+                        </script>
+
+                <script>
+                        BackgroundCheck.init({
+                                targets: '.intro-header,.navbar',
+                                images: '.intro-header'
+                        });
+                </script>
+        </body>
+</html>
+
