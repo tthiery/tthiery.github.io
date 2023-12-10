@@ -103,16 +103,24 @@
 <p>Popular opinion about MAUI is that you can stay in your language when you develop your full stack app. You write your service, your logic, your app in C# and also your web page .... wait ... no you do not. Blazor is awesome but no. There is JavaScript. So you are anyway polyglot. Why then not go React Native?</p>
 <p>Some years ago I evaluated the market for app frameworks. React Native was hot, Flutter was not there yet, Cordova just let PhoneGap behind it. Some smaller hot ones were around. We did fancy weighted comparison charts but there was a single line item which was crucial for us and MAUI - then Xamarin - beat everyone else by a length. And this still holds true to today: <strong>Native Interop</strong>.</p>
 <p>Application development frameworks are typically bringing your favourite programming language (C#, JavaScript, Java, ...), UI toolkit (HTML, Widgets, ...) or paradigm (React, ...) onto a set of platforms (iOS, Android, MacOS, Windows, Linux). The frameworks typically expose a set of functionality and <strong>rely on plugins</strong> to expose more and more of the platforms into a targeted programming language. And that is the crux.</p>
-<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza), consists roughly 4 products: .NET for Android, iOS, Mac and then MAUI (previously Xamarin Forms). MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The other three however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
+<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza) and later extensions, consists roughly of these products:</p>
+<ul>
+<li>.NET for Android</li>
+<li>.NET for iOS</li>
+<li>.NET for macOS</li>
+<li>.NET for Windows (via C#/WinRT)</li>
+<li>MAUI (previously Xamarin Forms)</li>
+</ul>
+<p>MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The others however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
 <ul>
 <li><p><strong>you do not need to master a programming language for each platform</strong> (Objective-C/Swift for iOS/Mac, Kotlin/Java for Android and C++/.NET for Windows) when writing plugins. This matters when you assemble your team and do not need to hire specialists and can keep your team setup simple even if you go into the depths. Basically the full stack within the app itself.</p>
 </li>
 <li><p>you can <strong>avoid abstractions introduced by plugins</strong> and can access the original platform SDK or third party SDK in its original behavior and to its full extend. Do not brush this of easily. When you need to capture the first three Bluetooth LE frames within 10ms after a connection establishment of Bluetooth LE and your abstraction is not allowing you to register a handler before that (looking at you WebBluetooth) then you cannot integrate the product with the abstraction / plugin.</p>
 </li>
 </ul>
-<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have native plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
+<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have their plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
 <p>Looping back to .NET MAUI. MAUI is a UI toolkit on top of that (based on native controls). Blazor Hybrid is another UI toolkit (based on web view controls, HTML/CSS) using MAUI. There is still theoretical hope that MAUI one day will render its own control to go to places where Flutter and QT go. I hope Microsoft understands its chance here. Especially when you combine it with a Visual Designer. Partially they <a href="https://devblogs.microsoft.com/dotnet/why-dotnet/#net-design-point">do</a>, but then, they completely forget to advertise this in context of MAUI.</p>
-<p>Summary: .NET MAUI has a unique selling point, native interop.</p>
+<p>Summary: .NET MAUI has a unique but largely overseen selling point, Native Interop.</p>
                 </div>       
                     <hr /> 
                 <div class="post-preview">
@@ -122,12 +130,13 @@
                     <p class="post-meta">Posted on Saturday, June 18, 2022</p>
 <p>The <a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276">announcement</a> to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.</p>
 <p>I am a .NET fanboy but I have a perspective on the broader spectrum of programming languages. I am an architect, decision maker/influencer and regularly involved in questions on whether Visual Studio Subscriptions are needed. I am not in a Microsoft shop, I am not in the silicon valley and I am in a conservative polyglot business.</p>
+<p><em><strong>Note</strong>: See Update in Appendix U</em></p>
 <h2 id="what-defines-a-state-of-the-art-programming-language">What defines a state of the art programming language</h2>
 <p>In the past, programming languages consisted of a runtime, compiler and debugger. Microsoft's own Anders Hejlsberg (of Pascal, C#, TypeScript) explained in an awesome video named &quot;<a href="https://docs.microsoft.com/en-us/shows/seth-juarez/anders-hejlsberg-on-modern-compiler-construction">Modern Compiler Construction</a>&quot; how previously considered IDE features like code completion, syntax highlighting, code analysis or code refactoring are now part of the compiler. C# (Roslyn) and especially TypeScript have been (modern day) forerunners of this. This combined with the general industry adoption of the <a href="https://github.com/microsoft/language-server-protocol">language server protocol</a> developed by the VS Code (Monaco?) team basically defines what a modern programming language is:</p>
 <ul>
 <li>A modern, modular, non-black-box compiler</li>
 <li>A debugger</li>
-<li>A rich out-of-the-box library</li>
+<li>A rich out-of-the-box library and runtime</li>
 <li>A LSP server written in the same programming language</li>
 </ul>
 <p>.NET is awesome in all of them: The compiler is awesome, the debugger is awesome, the base class library is awesome and the LSP server ... well ... is there. But make no mistake: The other languages have this whole portfolio as well or are on the way there (Java, JavaScript/TS, Python, Go, Rust, PHP, ...).</p>
@@ -200,6 +209,9 @@
 <li>There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).</li>
 <li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging (remember: we deal with a CPU who is not ambivalent in its outcome: it is either true or false) where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft management is not willing to tell us their roadmap and real intention.</li>
 </ul>
+<h2 id="appendix-u-update-in-december-2023">Appendix U: Update in December 2023</h2>
+<p>A year into the new license change and the release of the C# Dev Kit, I am happy to oberserve that <strong>Microsoft seems to have listened to the community</strong> and kept the LSP Server Host open source, and released a MIT licensed &quot;C#&quot; plugin and a commercial &quot;C# DevKit&quot;. This is really good. I am still in hope they realize that the money is with visual designers and one day we get model Apps like we did for WinForms.</p>
+<p>We are <strong>still waiting for the debugger</strong>.</p>
                 </div>       
                     <hr /> 
                 <div class="post-preview">
@@ -339,15 +351,15 @@ log.LogDebug();
             <h5>Tags</h5>
             <div>
                     <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (6)</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (4)</a>
-                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
-                    <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (2)</a>
+                    <a role="button" href="/tags/Software-Design" class="btn btn-default btn-sm"> Software Design (3)</a>
                     <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (2)</a>
-                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
-                    <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
-                    <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-sm"> ReactiveX (1)</a>
-                    <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-sm"> Powered UP (1)</a>
+                    <a role="button" href="/tags/Opinion" class="btn btn-default btn-sm"> Opinion (2)</a>
+                    <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
                     <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
+                    <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-sm"> System.Reactive (1)</a>
+                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-sm"> Powered UP (1)</a>
+                    <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">

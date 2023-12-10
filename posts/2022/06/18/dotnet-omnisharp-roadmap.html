@@ -80,7 +80,7 @@
 Published on Saturday, June 18, 2022<br>    </div>
         <div class="tags">
                     <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming</a>
+                    <a role="button" href="/tags/Opinion" class="btn btn-default btn-xs">Opinion</a>
         </div>     
 </div>
                                         </div>
@@ -96,12 +96,13 @@ Published on Saturday, June 18, 2022<br>    </div>
 
 <p>The <a href="https://github.com/OmniSharp/omnisharp-vscode/issues/5276">announcement</a> to make the LSP server host of OmniSharp closed source hits me hard. I cannot understand why the DevDiv leadership of Microsoft is so willingly and ongoingly destroying the reputation of .NET (Core). .NET Core is one of the three core pillars (VS Code, TypeScript and .NET Core) which generated respect for Microsoft in the wider programming community within the last 10 years.</p>
 <p>I am a .NET fanboy but I have a perspective on the broader spectrum of programming languages. I am an architect, decision maker/influencer and regularly involved in questions on whether Visual Studio Subscriptions are needed. I am not in a Microsoft shop, I am not in the silicon valley and I am in a conservative polyglot business.</p>
+<p><em><strong>Note</strong>: See Update in Appendix U</em></p>
 <h2 id="what-defines-a-state-of-the-art-programming-language">What defines a state of the art programming language</h2>
 <p>In the past, programming languages consisted of a runtime, compiler and debugger. Microsoft's own Anders Hejlsberg (of Pascal, C#, TypeScript) explained in an awesome video named &quot;<a href="https://docs.microsoft.com/en-us/shows/seth-juarez/anders-hejlsberg-on-modern-compiler-construction">Modern Compiler Construction</a>&quot; how previously considered IDE features like code completion, syntax highlighting, code analysis or code refactoring are now part of the compiler. C# (Roslyn) and especially TypeScript have been (modern day) forerunners of this. This combined with the general industry adoption of the <a href="https://github.com/microsoft/language-server-protocol">language server protocol</a> developed by the VS Code (Monaco?) team basically defines what a modern programming language is:</p>
 <ul>
 <li>A modern, modular, non-black-box compiler</li>
 <li>A debugger</li>
-<li>A rich out-of-the-box library</li>
+<li>A rich out-of-the-box library and runtime</li>
 <li>A LSP server written in the same programming language</li>
 </ul>
 <p>.NET is awesome in all of them: The compiler is awesome, the debugger is awesome, the base class library is awesome and the LSP server ... well ... is there. But make no mistake: The other languages have this whole portfolio as well or are on the way there (Java, JavaScript/TS, Python, Go, Rust, PHP, ...).</p>
@@ -174,6 +175,9 @@ Published on Saturday, June 18, 2022<br>    </div>
 <li>There are countless contributors who have contributed to OmniSharp, Hot Reload and the .NET Foundation (as an entity). Do not screw them. Do not steal their work (intelectionally, morally, reputation or physically).</li>
 <li>We developers very well accept Microsoft's need to earn money. Go Open Core with .NET. Be open about it, be smart about it (see all of above) and include the community on the road. We developer have zero tolerance for this kind of messaging (remember: we deal with a CPU who is not ambivalent in its outcome: it is either true or false) where we are told half of the relevant information. We are now in the third communication debacle within a year (.NET Foundation, Hot Reload, &quot;LSP Tools Host&quot;) just because Microsoft management is not willing to tell us their roadmap and real intention.</li>
 </ul>
+<h2 id="appendix-u-update-in-december-2023">Appendix U: Update in December 2023</h2>
+<p>A year into the new license change and the release of the C# Dev Kit, I am happy to oberserve that <strong>Microsoft seems to have listened to the community</strong> and kept the LSP Server Host open source, and released a MIT licensed &quot;C#&quot; plugin and a commercial &quot;C# DevKit&quot;. This is really good. I am still in hope they realize that the money is with visual designers and one day we get model Apps like we did for WinForms.</p>
+<p>We are <strong>still waiting for the debugger</strong>.</p>
 
 
 

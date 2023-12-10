@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>@tthiery&#x27;s Journal - xUnit</title>
+        <title>@tthiery&#x27;s Journal - Software Design</title>
         <meta name="description" content="Welcome Builders!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="@tthiery&#x27;s Journal" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="@tthiery&#x27;s Journal - xUnit" />
+        <meta property="og:title" content="@tthiery&#x27;s Journal - Software Design" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://tthiery.github.io/tags/xUnit" />
+        <meta property="og:url" content="http://tthiery.github.io/tags/Software-Design" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -73,7 +73,7 @@
                                 <div class="row">
                                         <div class="col-md-12">
 <div class="site-heading">
-    <h1>xUnit</h1>
+    <h1>Software Design</h1>
 </div>                                            </div>
                                 </div>
                         </div>
@@ -88,11 +88,23 @@
         <div class="col-sm-8 right-border col-sm-height">
             
         <div class="post-list">
-            <a href="/posts/2020/07/01/xunit-with-generic-paramter">
-                <h3 class="post-title">xUnit Theories with Type Parameters</h3>
+            <a href="/posts/2021/07/10/extension-methods">
+                <h3 class="post-title">Extension Methods</h3>
             </a>
-            <p class="post-meta">Posted on Wednesday, July 1, 2020</p>      
-<p>When unit testing generic protocols like the <a href="https://lego.github.io/lego-ble-wireless-protocol-docs">Lego Wireless Protocol</a> input values might be lead to different expected values. Sometimes, however, not only the value changes but also the data types of what to expect. xUnit's <code>Assert.Equal(expected, actual)</code> methods has overloads for countless basic data types like <code>short</code>, <code>double</code>, <code>bool</code> and elementary support for enums. To activate these, the expected argument would need to be parameterized with the right data type.</p>        </div>   
+            <p class="post-meta">Posted on Saturday, July 10, 2021</p>      
+<p>Extension Methods in C# are a crucial element of modern .NET. They are the foundation of LINQ and used everywhere. However, the are sometimes considered as a bad smell when it comes to code reviewing. In this article I want to discuss the concept of extension methods and its position in the OO patterns &amp; principles.</p>        </div>   
+        <div class="post-list">
+            <a href="/posts/2021/06/05/on-building-middleware">
+                <h3 class="post-title">On Building a Middleware Framework</h3>
+            </a>
+            <p class="post-meta">Posted on Saturday, June 5, 2021</p>      
+<p>I am fascinated by Middleware Stacks. Middlewares help us to customize a function invocation (typically a request handler) with additional behavior before and after the invocation of function. Popular examples are authentication, logging or exception handling middlewares. Often they handle non-functional requirements (like logging, security, ...).</p>        </div>   
+        <div class="post-list">
+            <a href="/posts/2020/06/12/reactivex-middlewares">
+                <h3 class="post-title">ReactiveX Middlewares</h3>
+            </a>
+            <p class="post-meta">Posted on Friday, June 12, 2020</p>      
+<p>While implementing <a href="https://github.com/sharpbrick/powered-up">sharpbrick/powered-up</a> an interesting problem came up to solve: How to handle the incoming messages of the Bluetooth Low Energy based communication protocol. On top of the Bluetooth abstraction there is a simple callback which would receive roughly 50 different message types which would need dispatching to several locations, some locations would even spawn up dynamically over time. I needed an infrastructure! I needed a middleware 😀.</p>        </div>   
 
 
             <nav>
@@ -108,13 +120,13 @@
 		
         <div class="col-sm-4 col-sm-height">
                 <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET (6)</a>
-                <a role="button" href="/tags/Software-Design" class="btn btn-default btn-xs">Software Design (3)</a>
+                <a role="button" href="/tags/Software-Design" class="btn btn-primary btn-xs">Software Design (3)</a>
                 <a role="button" href="/tags/Opinion" class="btn btn-default btn-xs">Opinion (2)</a>
                 <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-xs">VioletGrass.Middleware (2)</a>
                 <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-xs">SharpBrick.PoweredUp (2)</a>
                 <a role="button" href="/tags/Thinking" class="btn btn-default btn-xs">Thinking (1)</a>
                 <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-xs">Powered UP (1)</a>
-                <a role="button" href="/tags/xUnit" class="btn btn-primary btn-xs">xUnit (1)</a>
+                <a role="button" href="/tags/xUnit" class="btn btn-default btn-xs">xUnit (1)</a>
                 <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming (1)</a>
                 <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-xs">System.Reactive (1)</a>
                 <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-xs">PlatformIO (1)</a>

@@ -80,7 +80,7 @@
 Published on Monday, November 20, 2023<br>    </div>
         <div class="tags">
                     <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming</a>
+                    <a role="button" href="/tags/Opinion" class="btn btn-default btn-xs">Opinion</a>
         </div>     
 </div>
                                         </div>
@@ -104,16 +104,24 @@ Published on Monday, November 20, 2023<br>    </div>
 <p>Popular opinion about MAUI is that you can stay in your language when you develop your full stack app. You write your service, your logic, your app in C# and also your web page .... wait ... no you do not. Blazor is awesome but no. There is JavaScript. So you are anyway polyglot. Why then not go React Native?</p>
 <p>Some years ago I evaluated the market for app frameworks. React Native was hot, Flutter was not there yet, Cordova just let PhoneGap behind it. Some smaller hot ones were around. We did fancy weighted comparison charts but there was a single line item which was crucial for us and MAUI - then Xamarin - beat everyone else by a length. And this still holds true to today: <strong>Native Interop</strong>.</p>
 <p>Application development frameworks are typically bringing your favourite programming language (C#, JavaScript, Java, ...), UI toolkit (HTML, Widgets, ...) or paradigm (React, ...) onto a set of platforms (iOS, Android, MacOS, Windows, Linux). The frameworks typically expose a set of functionality and <strong>rely on plugins</strong> to expose more and more of the platforms into a targeted programming language. And that is the crux.</p>
-<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza), consists roughly 4 products: .NET for Android, iOS, Mac and then MAUI (previously Xamarin Forms). MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The other three however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
+<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza) and later extensions, consists roughly of these products:</p>
+<ul>
+<li>.NET for Android</li>
+<li>.NET for iOS</li>
+<li>.NET for macOS</li>
+<li>.NET for Windows (via C#/WinRT)</li>
+<li>MAUI (previously Xamarin Forms)</li>
+</ul>
+<p>MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The others however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
 <ul>
 <li><p><strong>you do not need to master a programming language for each platform</strong> (Objective-C/Swift for iOS/Mac, Kotlin/Java for Android and C++/.NET for Windows) when writing plugins. This matters when you assemble your team and do not need to hire specialists and can keep your team setup simple even if you go into the depths. Basically the full stack within the app itself.</p>
 </li>
 <li><p>you can <strong>avoid abstractions introduced by plugins</strong> and can access the original platform SDK or third party SDK in its original behavior and to its full extend. Do not brush this of easily. When you need to capture the first three Bluetooth LE frames within 10ms after a connection establishment of Bluetooth LE and your abstraction is not allowing you to register a handler before that (looking at you WebBluetooth) then you cannot integrate the product with the abstraction / plugin.</p>
 </li>
 </ul>
-<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have native plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
+<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have their plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
 <p>Looping back to .NET MAUI. MAUI is a UI toolkit on top of that (based on native controls). Blazor Hybrid is another UI toolkit (based on web view controls, HTML/CSS) using MAUI. There is still theoretical hope that MAUI one day will render its own control to go to places where Flutter and QT go. I hope Microsoft understands its chance here. Especially when you combine it with a Visual Designer. Partially they <a href="https://devblogs.microsoft.com/dotnet/why-dotnet/#net-design-point">do</a>, but then, they completely forget to advertise this in context of MAUI.</p>
-<p>Summary: .NET MAUI has a unique selling point, native interop.</p>
+<p>Summary: .NET MAUI has a unique but largely overseen selling point, Native Interop.</p>
 
 
 
