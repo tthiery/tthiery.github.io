@@ -5,12 +5,12 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>Journal</title>
+        <title>@tthiery&#x27;s Journal</title>
         <meta name="description" content="Welcome Builders!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
-        <link type="application/rss+xml" rel="alternate" title="Journal" href="/feed.rss" />
-                <link type="application/atom+xml" rel="alternate" title="Journal" href="/feed.atom" />
+        <link type="application/rss+xml" rel="alternate" title="@tthiery&#x27;s Journal" href="/feed.rss" />
+                <link type="application/atom+xml" rel="alternate" title="@tthiery&#x27;s Journal" href="/feed.atom" />
         <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
         <link rel="icon" href="/favicon.ico" type="image/x-icon">
 
@@ -24,11 +24,11 @@
         <link href="/assets/css/override.css" rel="stylesheet" />
 
 
-        <meta name="application-name" content="Journal" />
-        <meta name="msapplication-tooltip" content="Journal" />
+        <meta name="application-name" content="@tthiery&#x27;s Journal" />
+        <meta name="msapplication-tooltip" content="@tthiery&#x27;s Journal" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="Journal" />
+        <meta property="og:title" content="@tthiery&#x27;s Journal" />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="http://tthiery.github.io/" />
         <!-- TODO: More social graph meta tags -->
@@ -50,7 +50,7 @@
                                         <span class="icon-bar"></span>
                                         <span class="icon-bar"></span>
                                         </button>
-                                        <a class="navbar-brand" href="/">Journal</a>
+                                        <a class="navbar-brand" href="/">@tthiery&#x27;s Journal</a>
                                 </div>
                         
                                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -88,6 +88,33 @@
                                         
 <div class="row">
     <div class="col-sm-8 right-border">
+                <div class="post-preview">
+                    <a href="/posts/2023/11/20/why-dotnet-for-apps">
+                        <h2 class="post-title">Native interop: Where .NET beats the competition in app development</h2>
+                    </a>
+                    <p class="post-meta">Posted on Monday, November 20, 2023</p>
+<p>In the recent days Visual Studio for Mac was killed of and again the fears that .NET's MAUI is silverlighted by Microsoft comes up.</p>
+<blockquote class="blockquote">
+<p>to silverlight - verb</p>
+<p>the process of hyping a product, onboarding developer masses and then abondon it</p>
+<p>-- Windows Developer Community</p>
+</blockquote>
+<p>But <strong>why we need MAUI in the first place</strong>. Is not Flutter the hot thing. Is not React Native awesome. And even the old work horse Cordova has awesome perks when it comes to sharing the UI styling and the app itself with the Web. Why MAUI?</p>
+<p>Popular opinion about MAUI is that you can stay in your language when you develop your full stack app. You write your service, your logic, your app in C# and also your web page .... wait ... no you do not. Blazor is awesome but no. There is JavaScript. So you are anyway polyglot. Why then not go React Native?</p>
+<p>Some years ago I evaluated the market for app frameworks. React Native was hot, Flutter was not there yet, Cordova just let PhoneGap behind it. Some smaller hot ones were around. We did fancy weighted comparison charts but there was a single line item which was crucial for us and MAUI - then Xamarin - beat everyone else by a length. And this still holds true to today: <strong>Native Interop</strong>.</p>
+<p>Application development frameworks are typically bringing your favourite programming language (C#, JavaScript, Java, ...), UI toolkit (HTML, Widgets, ...) or paradigm (React, ...) onto a set of platforms (iOS, Android, MacOS, Windows, Linux). The frameworks typically expose a set of functionality and <strong>rely on plugins</strong> to expose more and more of the platforms into a targeted programming language. And that is the crux.</p>
+<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza), consists roughly 4 products: .NET for Android, iOS, Mac and then MAUI (previously Xamarin Forms). MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The other three however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
+<ul>
+<li><p><strong>you do not need to master a programming language for each platform</strong> (Objective-C/Swift for iOS/Mac, Kotlin/Java for Android and C++/.NET for Windows) when writing plugins. This matters when you assemble your team and do not need to hire specialists and can keep your team setup simple even if you go into the depths. Basically the full stack within the app itself.</p>
+</li>
+<li><p>you can <strong>avoid abstractions introduced by plugins</strong> and can access the original platform SDK or third party SDK in its original behavior and to its full extend. Do not brush this of easily. When you need to capture the first three Bluetooth LE frames within 10ms after a connection establishment of Bluetooth LE and your abstraction is not allowing you to register a handler before that (looking at you WebBluetooth) then you cannot integrate the product with the abstraction / plugin.</p>
+</li>
+</ul>
+<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have native plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
+<p>Looping back to .NET MAUI. MAUI is a UI toolkit on top of that (based on native controls). Blazor Hybrid is another UI toolkit (based on web view controls, HTML/CSS) using MAUI. There is still theoretical hope that MAUI one day will render its own control to go to places where Flutter and QT go. I hope Microsoft understands its chance here. Especially when you combine it with a Visual Designer. Partially they <a href="https://devblogs.microsoft.com/dotnet/why-dotnet/#net-design-point">do</a>, but then, they completely forget to advertise this in context of MAUI.</p>
+<p>Summary: .NET MAUI has a unique selling point, native interop.</p>
+                </div>       
+                    <hr /> 
                 <div class="post-preview">
                     <a href="/posts/2022/06/18/dotnet-omnisharp-roadmap">
                         <h2 class="post-title">How the Omnisharp roadmap affects .NET in Cooperations</h2>
@@ -155,7 +182,7 @@
 <li>Make both of them pluggable with Microsoft commercial plugins for the <em>advanced productivity</em>. I know, especially for the debugger, that this is an hard thing.</li>
 <li>Sell us a &quot;C# (Commercial)&quot; with <em>advanced productivity</em> edition next a fully free &quot;C# (Community)&quot; with <em>basic productivity</em> edition (free as in beer AND in open source license).</li>
 </ol>
-<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else. Not on the short term and not on the long term when trust is established.</p>
+<p>I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else. Not on the short term and not on the long term when trust is established. We talk here communication bridges and adapters.</p>
 <p>Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.</p>
 <h2 id="appendix-a-an-architecture-side-note">Appendix A: An architecture side note</h2>
 <ul>
@@ -299,203 +326,6 @@ log.LogDebug();
 <p>Not all extension method use cases are really good usages when it comes to object-oriented programming. However, there are plenty of good ones.</p>
 <p><em><strong>Note</strong>: I will continually update this article when I see proper use cases which are interesting to document.</em></p>
                 </div>       
-                    <hr /> 
-                <div class="post-preview">
-                    <a href="/posts/2021/06/05/on-building-middleware">
-                        <h2 class="post-title">On Building a Middleware Framework</h2>
-                    </a>
-                    <p class="post-meta">Posted on Saturday, June 5, 2021</p>
-<p>I am fascinated by Middleware Stacks. Middlewares help us to customize a function invocation (typically a request handler) with additional behavior before and after the invocation of function. Popular examples are authentication, logging or exception handling middlewares. Often they handle non-functional requirements (like logging, security, ...).</p>
-<p>As a .NET developer I use daily the prominent middleware stack in ASP.NET Core. While beautifully abstracted and designed, there is however one big caveat: It is bound to HTTP request/response. Due to that limitation I built <a href="https://github.com/violetgrass/middleware">violetgrass/middleware</a>.</p>
-<p>In this article I try to discuss the various elements of a ASP.NET Core inspired middleware stack implemented in pure .NET.</p>
-<h2 id="the-delegate">The delegate</h2>
-<p>A middleware is a stackable function. The function definition is called the <code>MiddlewareDelegate</code> (ASP.NET Core: <code>RequestDelegate</code>).</p>
-<pre><code class="language-csharp">public delegate Task MiddlewareDelegate&lt;TContext&gt;(TContext context) where TContext : Context;
-</code></pre>
-<p>The function expose the following characteristics:</p>
-<ul>
-<li>Is is <strong>asynchronous</strong>, since most likely, some part of the stack needs to access slowlier resources (e.g. a file system).</li>
-<li>It receives an invocation <strong>context</strong> (essentially the input and output of the function). (ASP.NET Core: <code>HttpContext</code>).</li>
-<li>It is a call without a return value.</li>
-<li>It is stateless on its own (it is a function not an interface for a class).</li>
-</ul>
-<p>A simple message handler can be represented in the <code>MiddlewareDelegate</code>.</p>
-<pre><code class="language-csharp">async Task HandleAsync(Context context)
-{
-    var message = GetMessageFromContext(context);
-    Console.WriteLine(message)
-}
-
-MiddlewareDelegate&lt;Context&gt; messageHandler = HandleAsync;
-
-var message = GetMessage();
-await messageHandler(message); // process the message.
-</code></pre>
-<p>A middleware however, is not only the final handler, but essentially everything in the <strong>middle</strong> between the dispatching invoker and the terminal handler.
-In simple cases, this could be added programmatically.</p>
-<pre><code class="language-csharp">async Task HandleAsync(Context context) { /* see above */ }
-async Task LogAsync(Context context)
-{
-    Log.Write(&quot;Before&quot;);
-    await HandleAsync(context);
-    Log.Write(&quot;After&quot;);
-}
-async Task CatchExceptionAsync(Context context)
-{
-    try
-    {
-        await LogAsync(context);
-    }
-    catch { /* ... */ }
-}
-
-MiddlewareDelegate&lt;Context&gt; messageHandler = CatchExceptionAsync;
-
-var message = GetMessage();
-await messageHandler(message); // try-catch, log and process the message.
-</code></pre>
-<p>This method of coding exposes some issues</p>
-<ul>
-<li>The composition of the functions influences the actual code of the functions.</li>
-<li>There is not methodology to integrate third parties or have out-of-the-box functionality.</li>
-</ul>
-<h2 id="the-building-of-the-middleware-stack">The building of the middleware (stack)</h2>
-<p>The purpose of using a middleware framework is to enable second and third party integrations into an efficient invocation stack. This includes all attributes of regular method stacking (like controlling the code before and after the invocation and handlings exceptions).</p>
-<p>In a first step, the invocation of the next wrapped function needs to be parameterized.</p>
-<pre><code class="language-csharp">async Task LogAsync(MiddlewareDelegate&lt;Context&gt; next, Context context)
-{
-    Log.Write(&quot;Before&quot;);
-    await next(context);
-    Log.Write(&quot;After&quot;);
-}
-</code></pre>
-<p>However, that would imply that the delegate is recursive and would differ between middleware (which need <code>next</code>) and the terminal handler (which does not need <code>next</code>). Closures to rescue which can bind additional variables not represented as function parameters. Closures need to be created by another function which holds the &quot;closured&quot; scope ...</p>
-<pre><code class="language-csharp">MiddlewareDelegate&lt;Context&gt; LogFactory(MiddlewareDelegate&lt;Context&gt; next)
-{
-    return async (Context context) =&gt; // = MiddlewareDelegate&lt;Context&gt;
-    { 
-        Log.Write(&quot;Before&quot;);
-        await next(context);
-        Log.Write(&quot;After&quot;);
-    };
-}
-
-// or in modern C# with local functions instead of lambdas.
-MiddlewareDelegate&lt;Context&gt; LogFactory(MiddlewareDelegate&lt;Context&gt; next)
-{
-    return LogAsync;
-
-    async Task LogAsync(Context context)
-    {
-        Log.Write(&quot;Before&quot;);
-        await next(context);
-        Log.Write(&quot;After&quot;);
-    }
-}
-
-// or if you like expression bodied member
-MiddlewareDelegate&lt;Context&gt; LogFactory(MiddlewareDelegate&lt;Context&gt; next)
-    =&gt; async context =&gt; {  Log.Write(&quot;Before&quot;); await next(context); Log.Write(&quot;After&quot;); };
-
-// or currying and first class functions
-Func&lt;MiddlewareDelegate&lt;Context&gt;, MiddlewareDelegate&lt;Context&gt;&gt; LogFactory = next =&gt; async context =&gt; {  Log.Write(&quot;Before&quot;); await next(context); Log.Write(&quot;After&quot;); };
-</code></pre>
-<p>This function which builds the middleware is called a <strong>middleware factory</strong> (<code>Func&lt;MiddlewareDelegate&lt;TContext&gt;, MiddlewareDelegate&lt;TContext&gt;&gt;</code>). It is a function which receives the <code>next</code> element in the middleware stack to built and emits a function which represent the current middleware and all middleware later in the stack.</p>
-<p>You can now write ..</p>
-<pre><code class="language-csharp">var messageHandlerStep3 = HandleAsync;
-var messageHandlerStep2 = LogFactory(messageHandlerStep3);
-var messageHandlerStep1 = CatchExceptionFactory(messageHandlerStep2);
-
-var message = GetMessage();
-await messageHandlerStep1(message); // try-catch, log and process the message.
-</code></pre>
-<p>So now let us build a fancy builder infrastructure for it.</p>
-<p>A <code>IMiddlewareBuilder&lt;TContext&gt;</code> (ASP.NET Core: <code>IApplicationBuilder</code>) collects a set of middleware factories.</p>
-<pre><code class="language-csharp">public IMiddlewareBuilder&lt;TContext&gt; Use(Func&lt;MiddlewareDelegate&lt;TContext&gt;, MiddlewareDelegate&lt;TContext&gt;&gt; middlewareFactory)
-{
-    _factories.Add(middlewareFactory);
-
-    return this;
-}
-public MiddlewareDelegate&lt;TContext&gt; Build()
-{
-    _factories.Reverse();
-
-    MiddlewareDelegate&lt;TContext&gt; current = context =&gt; Task.CompletedTask; // safeguard
-
-    foreach (var middlewareFactory in _factories)
-    {
-        current = middlewareFactory(current);
-    }
-
-    return current;
-}
-</code></pre>
-<p><em><strong>Note</strong>: Ignoring all the interface definitions and additional features beyond middleware, this above is the complete business logic of violetgrass/middleware.</em></p>
-<p>The above Build method iterate each factory (in reverse order) and throw the built middleware function of the current factory as an input to the factory method of the next layer. An Build invocation might look like that ...</p>
-<pre><code class="language-csharp">var messageHandler = new MiddlewareBuilder&lt;Context&gt;()
-    .Use(CatchExceptionFactory)
-    .Use(LogFactory)
-    .Use(next =&gt; HandleAsync) // no use of next
-    .Build();
-    
-var message = GetMessage();
-await messageHandler(message); // try-catch, log and process the message.
-</code></pre>
-<h2 id="configuring-the-middleware">Configuring the Middleware</h2>
-<p>With the use of C# extension methods, first and third party logic can be added to the <code>MiddlewareBuilder</code>. The builder extension methods can be influenced by parameters, Dependency Injection and other sources of information.</p>
-<p>Also, helper methods can be added to simplify the creation of middleware.</p>
-<pre><code class="language-csharp">// Typical third part integration
-public static class MiddlewareBuilderExtensions
-{
-    public static IMiddlewareBuilder&lt;TContext&gt; UseLog(this IMiddlewareBuilder&lt;TContext&gt; self, bool verboseLogging = false)
-    {
-        // this block is run when the builder (extension) methods are invoked (one-time).
-        // .. allows to perform configuration and collect metadata (e.g. via parameters or DI)
-        return self.Use(LogFactory);
-
-        MiddlewareDelegate&lt;Context&gt; LogFactory(MiddlewareDelegate&lt;Context&gt; next)
-        {
-            // this block is run when the middleware stack is actually build (one-time).
-            // .. the shape of the middleware is known at this moment
-            // .. has closure of configuration
-            return LogAsync;
-
-            async Task LogAsync(Context context)
-            {
-                // this block runs when the middleware stack is invoked (each-request)
-                // .. has closure of configuration
-                // .. has closure of shape
-
-                // as a middleware it encapsulates the next from the building time
-                if (verboseLogging) { Log.Write(&quot;Before&quot;); }
-                await next(context);
-                if (verboseLogging) { Log.Write(&quot;After&quot;); }
-            }
-        }
-    }
-}
-
-// simple helper functions
-public static partial class IMiddlewareBuilderExtensions
-{
-    public static IMiddlewareBuilder&lt;TContext&gt; Use&lt;TContext&gt;(this IMiddlewareBuilder&lt;TContext&gt; self, MiddlewareDelegate&lt;TContext&gt; middleware) where TContext : Context
-        =&gt; self.Use(next =&gt; async context =&gt; { await middleware(context); await next(context); });
-}
-
-var messageHandler = new MiddlewareBuilder&lt;Context&gt;()
-    .UseExceptionHandling()
-    .UseLog(verbose: true)
-    .Use(HandleAsync)
-    .Build();
-    
-var message = GetMessage();
-await messageHandler(message); // try-catch, log and process the message.
-</code></pre>
-<h2 id="conclusions">Conclusions</h2>
-<p>This article hopefully gave an introduction into how the <a href="https://github.com/violetgrass/middleware">violetgrass/middleware</a> and ASP.NET Core middleware stack work. While sometimes it looks over-engineered, it is actually quite simple and a powerful extensibility framework.</p>
-<p>There is more to typically middleware scenarios like dispatching and endpoint routing, however, this is material for other articles.</p>
-                </div>       
         <ul class="pager">
             <li class="previous">                
             </li>
@@ -508,16 +338,16 @@ await messageHandler(message); // try-catch, log and process the message.
 
             <h5>Tags</h5>
             <div>
-                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (5)</a>
-                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (3)</a>
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-sm"> .NET (6)</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-sm"> Programming (4)</a>
                     <a role="button" href="/tags/SharpBrickPoweredUp" class="btn btn-default btn-sm"> SharpBrick.PoweredUp (2)</a>
-                    <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (2)</a>
                     <a role="button" href="/tags/Architecture" class="btn btn-default btn-sm"> Architecture (2)</a>
+                    <a role="button" href="/tags/VioletGrassMiddleware" class="btn btn-default btn-sm"> VioletGrass.Middleware (2)</a>
                     <a role="button" href="/tags/Introduction" class="btn btn-default btn-sm"> Introduction (1)</a>
-                    <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
                     <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-sm"> PlatformIO (1)</a>
-                    <a role="button" href="/tags/SystemReactive" class="btn btn-default btn-sm"> System.Reactive (1)</a>
-                    <a role="button" href="/tags/xUnit" class="btn btn-default btn-sm"> xUnit (1)</a>
+                    <a role="button" href="/tags/ReactiveX" class="btn btn-default btn-sm"> ReactiveX (1)</a>
+                    <a role="button" href="/tags/Powered-UP" class="btn btn-default btn-sm"> Powered UP (1)</a>
+                    <a role="button" href="/tags/Notes" class="btn btn-default btn-sm"> Notes (1)</a>
             </div>
             <ul class="pager">
                 <li class="next">
@@ -528,10 +358,10 @@ await messageHandler(message); // try-catch, log and process the message.
             <hr />
             <h5>Older Posts</h5>
             <ul class="list-unstyled">
+                    <li><a href="/posts/2021/06/05/on-building-middleware">On Building a Middleware Framework</a></li>
                     <li><a href="/posts/2020/08/01/lego-powered-up-motor-modes-pos-and-apos">LEGO Powered UP - Motor Modes POS and APOS</a></li>
                     <li><a href="/posts/2020/07/01/xunit-with-generic-paramter">xUnit Theories with Type Parameters</a></li>
                     <li><a href="/posts/2020/06/12/reactivex-middlewares">ReactiveX Middlewares</a></li>
-                    <li><a href="/posts/2020/05/21/platformio-with-git">Using PlatformIO and Git</a></li>
             </ul>
                 <ul class="pager">
                     <li class="next">
@@ -555,7 +385,7 @@ await messageHandler(message); // try-catch, log and process the message.
         <div class="row">
                 <div class="col-md-12 text-center">
                     <p class="copyright text-muted">
-                        Copyright © 2022
+                        Copyright © 2023
                         <br />
                             <a href="/feed.rss"><i class="fa fa-rss"></i> RSS Feed</a>
                         |

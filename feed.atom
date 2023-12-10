@@ -1,11 +1,39 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 	<id>http://tthiery.github.io/</id>
-	<title>Journal</title>
+	<title>@tthiery's Journal</title>
 	<link rel="self" href="http://tthiery.github.io/" />
-	<rights>2022</rights>
-	<updated>2022-06-18T21:19:30Z</updated>
+	<rights>2023</rights>
+	<updated>2023-12-10T08:17:59Z</updated>
 	<subtitle>Welcome Builders!</subtitle>
+	<entry>
+		<id>http://tthiery.github.io/posts/2023/11/20/why-dotnet-for-apps</id>
+		<title>Native interop: Where .NET beats the competition in app development</title>
+		<link href="http://tthiery.github.io/posts/2023/11/20/why-dotnet-for-apps" />
+		<updated>2023-11-20T00:00:00Z</updated>
+		<content>&lt;p&gt;In the recent days Visual Studio for Mac was killed of and again the fears that .NET's MAUI is silverlighted by Microsoft comes up.&lt;/p&gt;
+&lt;blockquote class="blockquote"&gt;
+&lt;p&gt;to silverlight - verb&lt;/p&gt;
+&lt;p&gt;the process of hyping a product, onboarding developer masses and then abondon it&lt;/p&gt;
+&lt;p&gt;-- Windows Developer Community&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;But &lt;strong&gt;why we need MAUI in the first place&lt;/strong&gt;. Is not Flutter the hot thing. Is not React Native awesome. And even the old work horse Cordova has awesome perks when it comes to sharing the UI styling and the app itself with the Web. Why MAUI?&lt;/p&gt;
+&lt;p&gt;Popular opinion about MAUI is that you can stay in your language when you develop your full stack app. You write your service, your logic, your app in C# and also your web page .... wait ... no you do not. Blazor is awesome but no. There is JavaScript. So you are anyway polyglot. Why then not go React Native?&lt;/p&gt;
+&lt;p&gt;Some years ago I evaluated the market for app frameworks. React Native was hot, Flutter was not there yet, Cordova just let PhoneGap behind it. Some smaller hot ones were around. We did fancy weighted comparison charts but there was a single line item which was crucial for us and MAUI - then Xamarin - beat everyone else by a length. And this still holds true to today: &lt;strong&gt;Native Interop&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Application development frameworks are typically bringing your favourite programming language (C#, JavaScript, Java, ...), UI toolkit (HTML, Widgets, ...) or paradigm (React, ...) onto a set of platforms (iOS, Android, MacOS, Windows, Linux). The frameworks typically expose a set of functionality and &lt;strong&gt;rely on plugins&lt;/strong&gt; to expose more and more of the platforms into a targeted programming language. And that is the crux.&lt;/p&gt;
+&lt;p&gt;The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza), consists roughly 4 products: .NET for Android, iOS, Mac and then MAUI (previously Xamarin Forms). MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The other three however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). &lt;strong&gt;The native APIs. The full native APIs.&lt;/strong&gt; This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;you do not need to master a programming language for each platform&lt;/strong&gt; (Objective-C/Swift for iOS/Mac, Kotlin/Java for Android and C++/.NET for Windows) when writing plugins. This matters when you assemble your team and do not need to hire specialists and can keep your team setup simple even if you go into the depths. Basically the full stack within the app itself.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;you can &lt;strong&gt;avoid abstractions introduced by plugins&lt;/strong&gt; and can access the original platform SDK or third party SDK in its original behavior and to its full extend. Do not brush this of easily. When you need to capture the first three Bluetooth LE frames within 10ms after a connection establishment of Bluetooth LE and your abstraction is not allowing you to register a handler before that (looking at you WebBluetooth) then you cannot integrate the product with the abstraction / plugin.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, &lt;strong&gt;this single argument sorts out all the competition&lt;/strong&gt;. React Native, Flutter and Cordova all have native plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).&lt;/p&gt;
+&lt;p&gt;Looping back to .NET MAUI. MAUI is a UI toolkit on top of that (based on native controls). Blazor Hybrid is another UI toolkit (based on web view controls, HTML/CSS) using MAUI. There is still theoretical hope that MAUI one day will render its own control to go to places where Flutter and QT go. I hope Microsoft understands its chance here. Especially when you combine it with a Visual Designer. Partially they &lt;a href="https://devblogs.microsoft.com/dotnet/why-dotnet/#net-design-point"&gt;do&lt;/a&gt;, but then, they completely forget to advertise this in context of MAUI.&lt;/p&gt;
+&lt;p&gt;Summary: .NET MAUI has a unique selling point, native interop.&lt;/p&gt;
+</content>
+		<summary>&lt;p&gt;In the recent days Visual Studio for Mac was killed of and again the fears that .NET's MAUI is silverlighted by Microsoft comes up.&lt;/p&gt;</summary>
+	</entry>
 	<entry>
 		<id>http://tthiery.github.io/posts/2022/06/18/dotnet-omnisharp-roadmap</id>
 		<title>How the Omnisharp roadmap affects .NET in Cooperations</title>
@@ -73,7 +101,7 @@
 &lt;li&gt;Make both of them pluggable with Microsoft commercial plugins for the &lt;em&gt;advanced productivity&lt;/em&gt;. I know, especially for the debugger, that this is an hard thing.&lt;/li&gt;
 &lt;li&gt;Sell us a &amp;quot;C# (Commercial)&amp;quot; with &lt;em&gt;advanced productivity&lt;/em&gt; edition next a fully free &amp;quot;C# (Community)&amp;quot; with &lt;em&gt;basic productivity&lt;/em&gt; edition (free as in beer AND in open source license).&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else. Not on the short term and not on the long term when trust is established.&lt;/p&gt;
+&lt;p&gt;I do not see how Microsoft can loose intellectual property, thought leadership or market share to anyone else. Not on the short term and not on the long term when trust is established. We talk here communication bridges and adapters.&lt;/p&gt;
 &lt;p&gt;Considering, what happenend with Pylance (and IMHO PHP language server): The above should be a playbook for any language not only .NET/C#/F#.&lt;/p&gt;
 &lt;h2 id="appendix-a-an-architecture-side-note"&gt;Appendix A: An architecture side note&lt;/h2&gt;
 &lt;ul&gt;

@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
 
-        <title>@tthiery&#x27;s Journal - Using PlatformIO and Git</title>
+        <title>@tthiery&#x27;s Journal - Native interop: Where .NET beats the competition in app development</title>
         <meta name="description" content="Welcome Builders!" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">        
 
@@ -28,9 +28,9 @@
         <meta name="msapplication-tooltip" content="@tthiery&#x27;s Journal" />
         <meta name="msapplication-starturl" content="/" />
 
-        <meta property="og:title" content="@tthiery&#x27;s Journal - Using PlatformIO and Git" />
+        <meta property="og:title" content="@tthiery&#x27;s Journal - Native interop: Where .NET beats the competition in app development" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://tthiery.github.io/posts/2020/05/21/platformio-with-git" />
+        <meta property="og:url" content="http://tthiery.github.io/posts/2023/11/20/why-dotnet-for-apps" />
         <!-- TODO: More social graph meta tags -->
 
         
@@ -75,12 +75,12 @@
 
     
 <div class="post-heading">
-    <h1>Using PlatformIO and Git</h1>
+    <h1>Native interop: Where .NET beats the competition in app development</h1>
     <div class="meta">        
-Published on Thursday, May 21, 2020<br>    </div>
+Published on Monday, November 20, 2023<br>    </div>
         <div class="tags">
-                    <a role="button" href="/tags/Notes" class="btn btn-default btn-xs">Notes</a>
-                    <a role="button" href="/tags/PlatformIO" class="btn btn-default btn-xs">PlatformIO</a>
+                    <a role="button" href="/tags/NET" class="btn btn-default btn-xs">.NET</a>
+                    <a role="button" href="/tags/Programming" class="btn btn-default btn-xs">Programming</a>
         </div>     
 </div>
                                         </div>
@@ -94,26 +94,26 @@ Published on Thursday, May 21, 2020<br>    </div>
                                 <div id="content" class="col-md-12">
                                         
 
-<p>When working on my private PlatformIO project for a watertank sensor, I repeatingly struggled with how to manage the source code. PlatformIO is unfortunately not very clear explaining this topic.</p>
-<p>Simplified, the <code>platform.ini</code> contains references to the utilized SDKs and library dependencies. The only PlatformIO artifact are the <code>platform.ini</code> and the entry in the <code>extensions.json</code>.</p>
-<p><code>.gitignore</code> however, will have to contain some entries to avoid commiting the cached PlatformIO is using in form of <code>.pio</code>.</p>
-<h2 id="file-to-add-to-source-control">File to add to source control</h2>
+<p>In the recent days Visual Studio for Mac was killed of and again the fears that .NET's MAUI is silverlighted by Microsoft comes up.</p>
+<blockquote class="blockquote">
+<p>to silverlight - verb</p>
+<p>the process of hyping a product, onboarding developer masses and then abondon it</p>
+<p>-- Windows Developer Community</p>
+</blockquote>
+<p>But <strong>why we need MAUI in the first place</strong>. Is not Flutter the hot thing. Is not React Native awesome. And even the old work horse Cordova has awesome perks when it comes to sharing the UI styling and the app itself with the Web. Why MAUI?</p>
+<p>Popular opinion about MAUI is that you can stay in your language when you develop your full stack app. You write your service, your logic, your app in C# and also your web page .... wait ... no you do not. Blazor is awesome but no. There is JavaScript. So you are anyway polyglot. Why then not go React Native?</p>
+<p>Some years ago I evaluated the market for app frameworks. React Native was hot, Flutter was not there yet, Cordova just let PhoneGap behind it. Some smaller hot ones were around. We did fancy weighted comparison charts but there was a single line item which was crucial for us and MAUI - then Xamarin - beat everyone else by a length. And this still holds true to today: <strong>Native Interop</strong>.</p>
+<p>Application development frameworks are typically bringing your favourite programming language (C#, JavaScript, Java, ...), UI toolkit (HTML, Widgets, ...) or paradigm (React, ...) onto a set of platforms (iOS, Android, MacOS, Windows, Linux). The frameworks typically expose a set of functionality and <strong>rely on plugins</strong> to expose more and more of the platforms into a targeted programming language. And that is the crux.</p>
+<p>The .NET app framework (via the orignal startup/product Xamarin, founded by legendary Miguel de Icaza), consists roughly 4 products: .NET for Android, iOS, Mac and then MAUI (previously Xamarin Forms). MAUI is a shared UI toolkit similar to React Native (not Flutter because Flutter renders its own Material Design controls). The other three however, were exposing the native APIs of Android, iOS and MacOS into .NET (and a .NET runtime / compilation mode for these targets 😀). <strong>The native APIs. The full native APIs.</strong> This unfolds into very critical aspects when it comes to accessing platform functionality (programmed in language X) from the application development framework (programmed in language Y, here in .NET):</p>
 <ul>
-<li>.vscode
-<ul>
-<li>extensions.json</li>
-</ul>
+<li><p><strong>you do not need to master a programming language for each platform</strong> (Objective-C/Swift for iOS/Mac, Kotlin/Java for Android and C++/.NET for Windows) when writing plugins. This matters when you assemble your team and do not need to hire specialists and can keep your team setup simple even if you go into the depths. Basically the full stack within the app itself.</p>
 </li>
-<li>src/* (your source code)</li>
-<li>headers/* (your header)</li>
-<li>platform.ini</li>
+<li><p>you can <strong>avoid abstractions introduced by plugins</strong> and can access the original platform SDK or third party SDK in its original behavior and to its full extend. Do not brush this of easily. When you need to capture the first three Bluetooth LE frames within 10ms after a connection establishment of Bluetooth LE and your abstraction is not allowing you to register a handler before that (looking at you WebBluetooth) then you cannot integrate the product with the abstraction / plugin.</p>
+</li>
 </ul>
-<h2 id="files-in.gitignore">Files in <code>.gitignore</code></h2>
-<ul>
-<li>.pio (excluding all the cached libraries and board files)</li>
-<li>.vscode/c_cpp_properties.json (cache over all C artifacts)</li>
-<li>.vscode/launch.json (hardcoded to local directory by default)</li>
-</ul>
+<p>Now you may argue: But I do not need that! Or: I have plugins for everything in my framework! Well, indeed, most apps will never need this. But if you need it, like we do, <strong>this single argument sorts out all the competition</strong>. React Native, Flutter and Cordova all have native plugins written in other languages by other awesome people. Most of them will abstract the original SDKs, maybe to unify, maybe to simplify. In .NET on Android, iOS and MacOS native development for plugins is not necessary and abstraction is an optional choice (e.g. using Xamarin.Essentials).</p>
+<p>Looping back to .NET MAUI. MAUI is a UI toolkit on top of that (based on native controls). Blazor Hybrid is another UI toolkit (based on web view controls, HTML/CSS) using MAUI. There is still theoretical hope that MAUI one day will render its own control to go to places where Flutter and QT go. I hope Microsoft understands its chance here. Especially when you combine it with a Visual Designer. Partially they <a href="https://devblogs.microsoft.com/dotnet/why-dotnet/#net-design-point">do</a>, but then, they completely forget to advertise this in context of MAUI.</p>
+<p>Summary: .NET MAUI has a unique selling point, native interop.</p>
 
 
 
